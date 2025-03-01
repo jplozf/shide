@@ -1,0 +1,1428 @@
+#!/bin/bash
+#-----------------------------------------------------------------------
+# ShIDE :: A Small IDE for shell context
+# JPL 20250222
+#-----------------------------------------------------------------------
+
+#-----------------------------------------------------------------------
+# toUpper()
+#-----------------------------------------------------------------------
+function toUpper {
+	echo "$1" | awk '{print toupper($0)}'
+}
+
+#-----------------------------------------------------------------------
+# toLower()
+#-----------------------------------------------------------------------
+function toLower {
+	echo "$1" | awk '{print tolower($0)}'
+}
+
+#-----------------------------------------------------------------------
+# licenseApache()
+#-----------------------------------------------------------------------
+function licenseApache {
+	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/apache-v2.0.md"
+}
+
+#-----------------------------------------------------------------------
+# licenseArtistic()
+#-----------------------------------------------------------------------
+function licenseArtistic {
+	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/artistic-v2.0.md"
+}
+
+#-----------------------------------------------------------------------
+# licenseBSDv2()
+#-----------------------------------------------------------------------
+function licenseBSDv2 {
+	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/bsd-2.md"
+}
+
+#-----------------------------------------------------------------------
+# licenseBSDv3()
+#-----------------------------------------------------------------------
+function licenseBSDv3 {
+	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/bsd-3.md"
+}
+
+#-----------------------------------------------------------------------
+# licenseEPL()
+#-----------------------------------------------------------------------
+function licenseEPL {
+	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/epl-v1.0.md"
+}
+
+#-----------------------------------------------------------------------
+# licenseGNUAGPL()
+#-----------------------------------------------------------------------
+function licenseGNUAGPL {
+	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/gnu-agpl-v3.0.md"
+}
+
+#-----------------------------------------------------------------------
+# licenseGNUFDL()
+#-----------------------------------------------------------------------
+function licenseGNUFDL {
+	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/gnu-fdl-v1.3.md"
+}
+
+#-----------------------------------------------------------------------
+# licenseGNUGPLv1()
+#-----------------------------------------------------------------------
+function licenseGNUGPLv1 {
+	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/gnu-gpl-v1.0.md"
+}
+
+#-----------------------------------------------------------------------
+# licenseGNUCPLv2()
+#-----------------------------------------------------------------------
+function licenseGNUCPLv2 {
+	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/gnu-gpl-v2.0.md"
+}
+
+#-----------------------------------------------------------------------
+# licenseGNUGPLv3()
+#-----------------------------------------------------------------------
+function licenseGNUGPLv3 {
+	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/gnu-gpl-v3.0.md"
+}
+
+#-----------------------------------------------------------------------
+# licenseGNULGPLv2()
+#-----------------------------------------------------------------------
+function licenseGNULGPLv2 {
+	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/gnu-lgpl-v2.1.md"
+}
+
+#-----------------------------------------------------------------------
+# licenseGNULGPLv3()
+#-----------------------------------------------------------------------
+function licenseGNULGPLv3 {
+	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/gnu-lgpl-v3.0.md"
+}
+
+#-----------------------------------------------------------------------
+# licenseMIT()
+#-----------------------------------------------------------------------
+function licenseMIT {
+	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/mit.md"
+}
+
+#-----------------------------------------------------------------------
+# licenseMPL()
+#-----------------------------------------------------------------------
+function licenseMPL {
+	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/mpl-v2.0.md"
+}
+
+#-----------------------------------------------------------------------
+# licenseUnlicense()
+#-----------------------------------------------------------------------
+function licenseUnlicense {
+	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/unlicense.md"
+}
+
+#-----------------------------------------------------------------------
+# chooseLicense()
+#-----------------------------------------------------------------------
+function chooseLicense {
+		itemsLicenses=( 	1 "Apache"
+					2 "Artistic"
+					3 "BSD v2.0 (Simplified BSD License)"
+					4 "BSD v3.0 (Modified BSD License)"
+					5 "Eclipse Public License"
+					6 "GNU Affero General Public License"
+					7 "GNU Free Documentation License"
+					8 "GNU General Public License v1.0"
+					9 "GNU General Public License v2.0"
+					10 "GNU General Public License v3.0"
+					11 "GNU Lesser General Public License v2.1"
+					12 "GNU Lesser General Public License v3.0"
+					13 "MIT"
+					14 "Mozilla Public License v2.0"
+					15 "Unlicense (Public Domain)")
+					
+
+	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+				--title "License" \
+				--menu "" 25 50 10 "${itemsLicenses[@]}" \
+				2>&1 >/dev/tty)
+		do
+		case $choice in
+			1) licenseApache ;;
+			2) licenseArtistic ;;
+			3) licenseBSDv2 ;;
+			4) licenseBSDv3 ;;
+			5) licenseEPL ;;
+			6) licenseGNUAGPL ;;
+			7) licenseGNUFDL ;;
+			8) licenseGNUGPLv1 ;;
+			9) licenseGNUCPLv2 ;;
+			10) licenseGNUGPLv3 ;;
+			11) licenseGNULGPLv2 ;;
+			12) licenseGNULGPLv3 ;;
+			13) licenseMIT ;;
+			14) licenseMPL ;;
+			15) licenseUnlicense ;;
+			*) ;;
+		esac
+		break
+	done
+}
+
+#-----------------------------------------------------------------------
+# createReadMe()
+#-----------------------------------------------------------------------
+function createReadMe {
+	fileReadMe="${project}/README.md"
+	projectName=`basename ${project}`
+	cat > "$fileReadMe" <<EOF
+# ${projectName}
+
+## Installation
+
+## Usage
+
+## Contributing
+
+## License
+
+EOF
+}
+
+#-----------------------------------------------------------------------
+# openFile()
+#-----------------------------------------------------------------------
+function openFile {
+	let i=0 # define counting variable
+	W=() # define working array
+	while read -r line; do # process file by file
+		let i=$i+1
+		W+=($i "$line")
+	done < <( ls -a1 ./ )
+	file=$(dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+					--title "Open file" \
+					--menu "Please select :" 24 80 17 "${W[@]}" \
+					2>&1 >/dev/tty)
+	RESULT=$?
+	clear
+	if [ $RESULT -eq 0 ]; then 	# Exit with OK
+		opt=${W[$((file * 2 -1))]}
+		if [[ -d "$opt" ]] then	# Is it a directory...
+			cd "$opt"
+			openFile
+		else			# or a file ?
+			$EDITOR "$opt"
+			break
+		fi
+	fi
+}
+
+#-----------------------------------------------------------------------
+# deleteFile()
+#-----------------------------------------------------------------------
+function deleteFile {
+	let i=0 # define counting variable
+	W=() # define working array
+	while read -r line; do # process file by file
+		let i=$i+1
+		W+=($i "$line")
+	done < <( ls -a1 ./ )
+	file=$(dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+					--title "Delete file" \
+					--menu "Please select :" 24 80 17 "${W[@]}" \
+					2>&1 >/dev/tty)
+	RESULT=$?
+	clear
+	if [ $RESULT -eq 0 ]; then 	# Exit with OK
+		opt=${W[$((file * 2 -1))]}
+		if [[ -d "$opt" ]] then	# Is it a directory...
+			cd "$opt"
+			deleteFile
+		else			# or a file ?
+			dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+				--title "Deleting file" \
+				--yesno "Are you sure you want to delete the following file :\n\n$opt" 7 60
+			response=$?
+			case $response in
+				0) rm "$opt" ;;
+				*) ;;
+			esac
+			break
+		fi
+	fi
+}
+
+#-----------------------------------------------------------------------
+# newFileOther()
+#-----------------------------------------------------------------------
+function newFileOther {
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			     --title "New file" \
+				 --inputbox "Please, enter the file name :" 12 40 \
+				 2>&1 >/dev/tty)
+	if [[ -z "$new" ]] then
+		return
+	else
+		touch "$new"
+		$EDITOR "$new"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# newFileC()
+#-----------------------------------------------------------------------
+function newFileC {
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			     --title "New C file" \
+				 --inputbox "Please, enter the file name :" 12 40 \
+				 2>&1 >/dev/tty)
+	if [[ -z "$new" ]] then
+		return
+	else
+		mainFileX="${new}.c"
+		fullFileX="${project}/${mainFileX}"
+		cat > "$fullFileX" <<EOF
+#include <stdio.h>
+
+int main(int argc, char *argv[]) {
+	printf("Hello, World.\n");
+	return 0;
+}
+EOF
+		$EDITOR "$fullFileX"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# newFileCPP()
+#-----------------------------------------------------------------------
+function newFileCPP {
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			     --title "New C++ file" \
+				 --inputbox "Please, enter the file name :" 12 40 \
+				 2>&1 >/dev/tty)
+	if [[ -z "$new" ]] then
+		return
+	else
+		mainFileX="${new}.cpp"
+		fullFileX="${project}/${mainFileX}"
+		cat > "$fullFileX" <<EOF
+#include <iostream>
+
+int main() {
+	std::cout << "Hello, World.\n";
+	return 0;
+}
+EOF
+		$EDITOR "$fullFileX"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# newFileH()
+#-----------------------------------------------------------------------
+function newFileH {
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			--title "New Header file" \
+			--inputbox "Please, enter the file name :" 12 40 \
+				 2>&1 >/dev/tty)
+	if [[ -z "$new" ]] then
+		return
+	else
+		mainFileX="${new}.h"
+		fullFileX="${project}/${mainFileX}"
+		includeH=$(toUpper $mainFileX | tr '.' '_')
+		cat > "$fullFileX" <<EOF
+#ifndef $includeH
+#define $includeH
+
+#endif
+EOF
+		$EDITOR "$fullFileX"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# newFileJAVA()
+#-----------------------------------------------------------------------
+function newFileJAVA {
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+		     --title "New Java file" \
+		     --inputbox "Please, enter the file name :" 12 40 \
+				 2>&1 >/dev/tty)
+	if [[ -z "$new" ]] then
+		return
+	else
+		mainFileX="${new}.java"
+		fullFileX="${project}/${mainFileX}"
+		cat > "$fullFileX" <<EOF
+package MyPackage;
+
+/** class MyApp.
+*/
+public final class MyApp
+{
+   /** Constructor. */
+   public MyApp()
+   {
+   }
+
+   public static void main(String[] args) throws Exception
+   {
+      new MyApp();
+   }
+
+}
+EOF
+		$EDITOR "$fullFileX"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# newFilePY()
+#-----------------------------------------------------------------------
+function newFilePY {
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			     --title "New Python file" \
+				 --inputbox "Please, enter the file name :" 12 40 \
+				 2>&1 >/dev/tty)
+	if [[ -z "$new" ]] then
+		return
+	else
+		mainFileX="${new}.py"
+		fullFileX="${project}/${mainFileX}"
+		cat > "$fullFileX" <<EOF
+#include <iostream>
+
+int main() {
+	std::cout << "Hello, World.\n";
+	return 0;
+}
+EOF
+		$EDITOR "$fullFileX"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# newFileGO()
+#-----------------------------------------------------------------------
+function newFileGO {
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			     --title "New Go file" \
+				 --inputbox "Please, enter the file name :" 12 40 \
+				 2>&1 >/dev/tty)
+	if [[ -z "$new" ]] then
+		return
+	else
+		mainFileX="${new}.go"
+		fullFileX="${project}/${mainFileX}"
+		cat > "$fullFileX" <<EOF
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, World.")
+}
+EOF
+		$EDITOR "$fullFileX"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# newFileRS()
+#-----------------------------------------------------------------------
+function newFileRS {
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			     --title "New Rust file" \
+				 --inputbox "Please, enter the file name :" 12 40 \
+				 2>&1 >/dev/tty)
+	if [[ -z "$new" ]] then
+		return
+	else
+		mainFileX="${new}.rs"
+		fullFileX="${project}/${mainFileX}"
+		cat > "$fullFileX" <<EOF
+fn main() {
+    println!("Hello, World.");
+}
+EOF
+		$EDITOR "$fullFileX"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# newFileHTML()
+#-----------------------------------------------------------------------
+function newFileHTML {
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			     --title "New HTML file" \
+				 --inputbox "Please, enter the file name :" 12 40 \
+				 2>&1 >/dev/tty)
+	if [[ -z "$new" ]] then
+		return
+	else
+		mainFileX="${new}.html"
+		fullFileX="${project}/${mainFileX}"
+		cat > "$fullFileX" <<EOF
+#include <iostream>
+
+int main() {
+	std::cout << "Hello, World.\n";
+	return 0;
+}
+EOF
+		$EDITOR "$fullFileX"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# newFileXML()
+#-----------------------------------------------------------------------
+function newFileXML {
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			     --title "New XML file" \
+				 --inputbox "Please, enter the file name :" 12 40 \
+				 2>&1 >/dev/tty)
+	if [[ -z "$new" ]] then
+		return
+	else
+		mainFileX="${new}.xml"
+		fullFileX="${project}/${mainFileX}"
+		cat > "$fullFileX" <<EOF
+#include <iostream>
+
+int main() {
+	std::cout << "Hello, World.\n";
+	return 0;
+}
+EOF
+		$EDITOR "$fullFileX"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# newFileJSON()
+#-----------------------------------------------------------------------
+function newFileJSON {
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			     --title "New JSON file" \
+				 --inputbox "Please, enter the file name :" 12 40 \
+				 2>&1 >/dev/tty)
+	if [[ -z "$new" ]] then
+		return
+	else
+		mainFileX="${new}.json"
+		fullFileX="${project}/${mainFileX}"
+		cat > "$fullFileX" <<EOF
+{
+  "first_name": "John",
+  "last_name": "Smith",
+  "is_alive": true,
+  "age": 27,
+  "address": {
+    "street_address": "21 2nd Street",
+    "city": "New York",
+    "state": "NY",
+    "postal_code": "10021-3100"
+  },
+  "phone_numbers": [
+    {
+      "type": "home",
+      "number": "212 555-1234"
+    },
+    {
+      "type": "office",
+      "number": "646 555-4567"
+    }
+  ],
+  "children": [
+    "Catherine",
+    "Thomas",
+    "Trevor"
+  ],
+  "spouse": null
+}
+EOF
+		$EDITOR "$fullFileX"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# newFileMD()
+#-----------------------------------------------------------------------
+function newFileMD {
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			     --title "New Markdown file" \
+				 --inputbox "Please, enter the file name :" 12 40 \
+				 2>&1 >/dev/tty)
+	if [[ -z "$new" ]] then
+		return
+	else
+		mainFileX="${new}.md"
+		fullFileX="${project}/${mainFileX}"
+		cat > "$fullFileX" <<EOF
+# Example headings
+
+## Sample Section
+
+## This'll be a _Helpful_ Section About the Greek Letter Θ!
+A heading containing characters not allowed in fragments, UTF-8 characters, two consecutive spaces between the first and second words, and formatting.
+
+## This heading is not unique in the file
+
+TEXT 1
+
+## This heading is not unique in the file
+
+TEXT 2
+
+# Links to the example headings above
+
+Link to the sample section: [Link Text](#sample-section).
+
+Link to the helpful section: [Link Text](#thisll--be-a-helpful-section-about-the-greek-letter-Θ).
+
+Link to the first non-unique section: [Link Text](#this-heading-is-not-unique-in-the-file).
+
+Link to the second non-unique section: [Link Text](#this-heading-is-not-unique-in-the-file-1).
+EOF
+		$EDITOR "$fullFileX"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# newFileTXT()
+#-----------------------------------------------------------------------
+function newFileTXT {
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			     --title "New Text file" \
+				 --inputbox "Please, enter the file name :" 12 40 \
+				 2>&1 >/dev/tty)
+	if [[ -z "$new" ]] then
+		return
+	else
+		mainFileX="${new}.txt"
+		fullFileX="${project}/${mainFileX}"
+		cat > "$fullFileX" <<EOF
++----------------------------------------------------------------------+
+|                         MY TEXT DOCUMENTATION                        |
++----------------------------------------------------------------------+
+
+1. SUMMARY
+
+2. DOCUMENTATION
+
+3. CONCLUSION
+EOF
+		$EDITOR "$fullFileX"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# menuNewFile()
+#-----------------------------------------------------------------------
+function menuNewFile {
+	itemsNew=( 	1 "C file      (.c)"
+			2 "C++ file    (.cpp)"
+			3 "Header file (.h)"
+			4 "Java file   (.java)"
+			5 "Python file (.py)"
+			6 "Go file     (.go)"
+			7 "Rust file   (.rs)"
+                        8 "HTML file   (.html)"
+                        9 "XML file    (.xml)"
+                       10 "JSON file   (.json)"
+                       11 "Markdown    (.md)"
+                       12 "Text        (.txt)"
+                       13 "License"
+                       14 "Other")
+
+	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+				--title "New file" \
+				--menu "" 20 40 10 "${itemsNew[@]}" \
+				2>&1 >/dev/tty)
+		do
+		case $choice in
+			1) newFileC ;;
+			2) newFileCPP ;;
+			3) newFileH ;;
+			4) newFileJAVA ;;
+			5) newFilePY ;;
+			6) newFileGO ;;
+			7) newFileRS ;;
+			8) newFileHTML ;;
+			9) newFileXML ;;
+			10) newFileJSON ;;
+			11) newFileMD ;;
+			12) newFileTXT ;;
+			13) chooseLicense ;;
+			14) newFileOther ;;
+			*) ;;
+		esac
+	done			
+}
+
+#-----------------------------------------------------------------------
+# menuFiles()
+#-----------------------------------------------------------------------
+function menuFiles {
+	itemsFiles=(	1 "Open file"
+			2 "New file"
+			3 "Delete file")
+	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+					 --title "Files" \
+					 --menu "" 12 40 10 "${itemsFiles[@]}" \
+					 2>&1 >/dev/tty)	
+		do
+		case $choice in
+			1) openFile ;;
+			2) menuNewFile ;;
+			3) deleteFile ;;
+			*) ;; # some action on other
+		esac
+	done	
+}
+
+#-----------------------------------------------------------------------
+# openProject()
+#-----------------------------------------------------------------------
+function openProject {
+	let i=0 # define counting variable
+	W=() # define working array
+	while read -r line; do # process file by file
+		let i=$i+1
+		W+=($i "$line")
+	done < <( find . -maxdepth 1 -type d -o -type l | sort -k1 )
+	file=$(dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+					--title "Open project" \
+					--menu "Please, move to the project folder :" 24 80 17 "${W[@]}" \
+					2>&1 >/dev/tty)
+	RESULT=$?
+	clear
+	if [ $RESULT -eq 0 ]; then 	# Exit with OK
+		opt=${W[$((file * 2 -1))]}
+		if [[ $opt = "." ]] then
+			cd ..
+			project=$PWD
+			openProject
+		else
+			cd "$opt"
+			project=$PWD
+			openProject
+		fi
+		guessLanguage
+	fi
+}
+
+#-----------------------------------------------------------------------
+# inputNewProjectName()
+#-----------------------------------------------------------------------
+function inputNewProjectName {
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+				 --title "New project" \
+				 --inputbox "Please, enter the project name :" 12 40 \
+				 2>&1 >/dev/tty)
+	echo $new
+}
+
+#-----------------------------------------------------------------------
+# projectPYTHON()
+#-----------------------------------------------------------------------
+function projectPYTHON {
+	language="PYTHON"
+	new=$(inputNewProjectName)
+	if [[ -z $new ]] then
+		return
+	else
+		mkdir "$new"
+		cd "$new"
+		project=$PWD
+		chooseLicense
+	fi
+	mainFileX=`basename ${project}.py`
+	fullFileX="${project}/${mainFileX}"
+	cat > "$fullFileX" <<EOF
+#!/usr/bin/env python
+# -*- coding: utf-8 *-*
+
+import sys
+
+def main():
+	print("This is the name of the script : ", sys.argv[0])
+	print("Number of arguments            : ", len(sys.argv))
+	print("The arguments are              : ", str(sys.argv))
+
+if __name__ == "__main__":
+	main()
+EOF
+	chmod +x "$fullFileX"
+	createReadMe
+	$EDITOR "$fullFileX"
+}
+
+#-----------------------------------------------------------------------
+# projectCRaw()
+#-----------------------------------------------------------------------
+function projectCRaw {
+	new=$(inputNewProjectName)
+	if [[ -z $new ]] then
+		return
+	else
+		mkdir "$new"
+		cd "$new"
+		project=$PWD
+		chooseLicense
+	fi
+	mainFileH=`basename ${project}.h`
+	fullFileH="${project}/${mainFileH}"
+	includeH=$(toUpper $mainFileH | tr '.' '_')
+	cat > "$fullFileH" <<EOF
+#ifndef $includeH
+#define $includeH
+
+#endif
+EOF
+	mainFileC=`basename ${project}.c`
+	fullFileC="${project}/${mainFileC}"
+	cat > "$fullFileC" <<EOF
+#include "$mainFileH"
+#include <stdio.h>
+
+int main(int argc, char *argv[]) {
+	printf("Hello, World.\n");
+	return 0;
+}
+EOF
+	binFile=`basename ${project}`
+	buildFile="${project}/_build"
+	cat > "$buildFile" <<EOF
+#!/bin/bash
+
+gcc -o $binFile $mainFileC $mainFileH
+EOF
+	chmod +x "$buildFile"
+	createReadMe
+	$EDITOR "$fullFileC" "$fullFileH"
+}
+
+#-----------------------------------------------------------------------
+# projectCPPRaw()
+#-----------------------------------------------------------------------
+function projectCPPRaw {
+	new=$(inputNewProjectName)
+	if [[ -z $new ]] then
+		return
+	else
+		mkdir "$new"
+		cd "$new"
+		project=$PWD
+		chooseLicense
+	fi
+	mainFileH=`basename ${project}.h`
+	fullFileH="${project}/${mainFileH}"
+	includeH=$(toUpper $mainFileH | tr '.' '_')
+	cat > "$fullFileH" <<EOF
+#ifndef $includeH
+#define $includeH
+
+#endif
+EOF
+	mainFileCPP=`basename ${project}.cpp`
+	fullFileCPP="${project}/${mainFileCPP}"
+	cat > "$fullFileCPP" <<EOF
+#include "$mainFileH"
+#include <iostream>
+
+int main() {
+  std::cout << "Hello, World.\n";
+  return 0;
+}
+EOF
+	binFile=`basename ${project}`
+	buildFile="${project}/_build"
+	cat > "$buildFile" <<EOF
+#!/bin/bash
+
+g++ -o $binFile $mainFileCPP $mainFileH
+EOF
+	chmod +x "$buildFile"
+	createReadMe
+	$EDITOR "$fullFileCPP" "$fullFileH"
+}
+
+#-----------------------------------------------------------------------
+# projectCNCurses()
+#-----------------------------------------------------------------------
+function projectCNCurses {
+	new=$(inputNewProjectName)
+	if [[ -z $new ]] then
+		return
+	else
+		mkdir "$new"
+		cd "$new"
+		project=$PWD
+		chooseLicense
+	fi
+	mainFileH=`basename ${project}.h`
+	fullFileH="${project}/${mainFileH}"
+	includeH=$(toUpper $mainFileH | tr '.' '_')
+	cat > "$fullFileH" <<EOF
+#ifndef $includeH
+#define $includeH
+
+#endif
+EOF
+	mainFileC=`basename ${project}.c`
+	fullFileC="${project}/${mainFileC}"
+	cat > "$fullFileC" <<EOF
+#include "$mainFileH"
+#include <ncurses/ncurses.h>
+ 
+int main(int argc, char *argv[]) {
+	initscr();			/* Start curses mode 		  */
+	printw("Hello World !!!");	/* Print Hello World		  */
+	refresh();			/* Print it on to the real screen */
+	getch();			/* Wait for user input */
+	endwin();			/* End curses mode		  */
+	return 0;
+}
+EOF
+	binFile=`basename ${project}`
+	buildFile="${project}/_build"
+	cat > "$buildFile" <<EOF
+#!/bin/bash
+
+gcc -lncurses -o $binFile $mainFileC $mainFileH
+EOF
+	chmod +x "$buildFile"
+	createReadMe
+	$EDITOR "$fullFileC" "$fullFileH"
+}
+
+#-----------------------------------------------------------------------
+# projectC()
+#-----------------------------------------------------------------------
+function projectC {
+	language="C/C++"
+	itemsCToolkits=(1 "C Raw"
+			2 "C NCurses"
+			3 "C++ Raw")
+	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+				 --title "C Toolkit" \
+				 --menu "" 12 40 10 "${itemsCToolkits[@]}" \
+				 2>&1 >/dev/tty)	
+		do
+		case $choice in
+			1) projectCRaw ;;
+			2) projectCNCurses ;;
+			3) projectCPPRaw ;;
+			*) ;; # some action on other
+		esac
+	done	
+}
+
+#-----------------------------------------------------------------------
+# projectGO()
+#-----------------------------------------------------------------------
+function projectGO {
+	language="GO"
+	new=$(inputNewProjectName)
+	if [[ -z $new ]] then
+		return
+	else
+		mkdir "$new"
+		cd "$new"
+		project=$PWD
+		chooseLicense
+	fi
+	mainModule=`basename ${project}`
+	go mod init $mainModule
+	mainFileGO=`basename ${project}.go`
+	fullFileGO="${project}/${mainFileGO}"
+	cat > "$fullFileGO" <<EOF
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, World!")
+}
+EOF
+	createReadMe
+	$EDITOR "$fullFileGO"
+}
+
+#-----------------------------------------------------------------------
+# projectGIT()
+#-----------------------------------------------------------------------
+function projectGIT {
+	language="GIT"
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+				 --title "Clone GIT project" \
+				 --inputbox "Please, enter the Github repository name :" 12 40 \
+				 2>&1 >/dev/tty)
+	if [[ -z $new ]] then
+		return
+	else
+		dialog --backtitle "${ide} :: ${project} [${language}]" \
+			--title "GIT Cloning" \
+			--infobox "\nCloning $new\n\nPlease wait..." 15 50
+		git clone --progress $new &>/dev/null
+		rc=$?
+		if [[ $rc -eq 0 ]] then
+			mainFolder=`basename ${new}`
+			cd "$mainFolder"
+			project=$PWD
+			guessLanguage
+			infoProject
+		else
+			dialog --backtitle "${ide} :: ${project} [${language}]" \
+			--title "GIT Cloning" \
+			--msgbox "\nError cloning :\n\n$new" 15 50
+		fi
+	fi
+}
+
+#-----------------------------------------------------------------------
+# projectRUST()
+#-----------------------------------------------------------------------
+function projectRUST {
+	language="RUST"
+	new=$(inputNewProjectName)
+	if [[ -z $new ]] then
+		return
+	else
+		mainModule=`basename ${new}`
+		cargo new $mainModule &>/dev/null
+		cd "$new"
+		project=$PWD
+		chooseLicense
+		createReadMe
+		infoProject
+	fi
+}
+
+#-----------------------------------------------------------------------
+# newProject()
+#-----------------------------------------------------------------------
+function newProject {
+	itemsLanguages=(1 "C/C++"
+			2 "Java"
+			3 "Go"
+			4 "Python"
+			5 "Rust"
+			6 "Clone from GIT")
+	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+				 --title "Language" \
+				 --menu "" 13 40 10 "${itemsLanguages[@]}" \
+				 2>&1 >/dev/tty)	
+		do
+		case $choice in
+			1) projectC ;;
+			2) projectJAVA ;;
+			3) projectGO ;;
+			4) projectPYTHON ;;
+			5) projectRUST ;;
+			6) projectGIT ;;
+			*) ;; # some action on other
+		esac
+		break
+	done
+}
+
+#-----------------------------------------------------------------------
+# infoProject()
+#-----------------------------------------------------------------------
+function infoProject {
+	outFile=`mktemp`
+	rawProject=`basename ${project}`
+	tree -Dh > $outFile
+	cloc ./ >> $outFile
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			 --title "PROJECT :: $rawProject" \
+			 --textbox "$outFile" 25 100 \
+			 2>&1 >/dev/tty)
+}
+
+#-----------------------------------------------------------------------
+# archiveProject()
+#-----------------------------------------------------------------------
+function archiveProject {
+	fzip="${project}_$(date +"%Y%m%d-%H%M%S").zip"
+			dialog --backtitle "${ide} :: ${project} [${language}]" \
+			--title "Archiving project" \
+			--infobox "\nArchiving to $fzip file.\n\nPlease wait..." 15 80
+	zip -r "$fzip" ./ >/dev/null 2>&1
+	dialog --backtitle "${ide} :: ${project} [${language}]" \
+				 --title "Archiving project" \
+				 --msgbox "\nThe following archive has been created :\n\n$fzip" 15 80 \
+				 2>&1 >/dev/tty
+}
+
+#-----------------------------------------------------------------------
+# countExtension()
+#-----------------------------------------------------------------------
+function countExtension {
+	echo `find . -name \*.$1 -not -path \*/\.\* | wc -l`
+}
+
+#-----------------------------------------------------------------------
+# guessLanguage()
+#-----------------------------------------------------------------------
+function guessLanguage {
+	cd "$project"
+	extFiles=$(countExtension "py")
+	if [ $extFiles -gt 0 ]; then
+		language="PYTHON"
+	else
+		extFiles=$(countExtension "go")
+		if [ $extFiles -gt 0 ]; then
+			language="GO"
+		else
+			extFiles=$(countExtension "c")
+			if [ $extFiles -gt 0 ]; then
+				language="C/C++"
+			else
+				extFiles=$(countExtension "cpp")
+				if [ $extFiles -gt 0 ]; then
+					language="C/C++"
+				else
+					extFiles=$(countExtension "java")
+					if [ $extFiles -gt 0 ]; then
+						language="JAVA"
+					else
+						extFiles=$(countExtension "rs")
+						if [ $extFiles -gt 0 ]; then
+							language="RUST"
+						else
+							language="UNKNOWN"
+						fi
+					fi
+				fi
+			fi
+		fi
+	fi
+}
+
+#-----------------------------------------------------------------------
+# buildProgram()
+#-----------------------------------------------------------------------
+function buildProgram {
+	cd "$project"
+	buildFile="${project}/_build"
+	if [ -f "$buildFile" ]; then
+		outFile=`mktemp`
+		$buildFile > $outFile 2>&1
+		ec=$?
+		case $ec in
+			0) dialog --backtitle "${ide} :: ${project} [${language}]" \
+				 --title "Build project" \
+				 --msgbox "\nThe program has been build successfully.\n" 12 80 \
+				 2>&1 >/dev/tty ;;
+			*) dialog --backtitle "${ide} :: ${project}" \
+				 --title "Build project" \
+				 --textbox "$outFile" 25 80 \
+				 2>&1 >/dev/tty ;;
+		esac
+		infoProject
+	else
+		pyFile=`basename ${project}.py`
+		if [ -f "$pyFile" ]; then
+			dialog --backtitle "${ide} :: ${project} [${language}]" \
+				 --title "Build project" \
+				 --msgbox "\nNo need to build Python program.\nYou just have to run it.\n" 12 80 \
+				 2>&1 >/dev/tty
+			infoProject
+		else
+			javaFile=`basename ${project}.java`
+			if [ -f "$javaFile" ]; then
+				clear
+				javac -cp . $javaFile
+				pause
+			else
+				goFile=`basename ${project}.go`
+				if [ -f "$goFile" ]; then
+					outFile=`mktemp`
+					go build . > $outFile 2>&1
+					ec=$?
+					case $ec in
+						0) dialog --backtitle "${ide} :: ${project} [${language}]" \
+							 --title "Build project" \
+							 --msgbox "\nThe program has been build successfully.\n" 12 80 \
+							 2>&1 >/dev/tty ;;
+						*) dialog --backtitle "${ide} :: ${project} [${language}]" \
+							 --title "Build project" \
+							 --textbox "$outFile" 25 80 \
+							 2>&1 >/dev/tty ;;
+					esac
+					infoProject
+				else
+					rustFile="Cargo.toml"
+					if [ -f "$rustFile" ]; then
+						outFile=`mktemp`
+						cargo build > $outFile 2>&1
+						ec=$?
+						case $ec in
+							0) dialog --backtitle "${ide} :: ${project} [${language}]" \
+								 --title "Build project" \
+								 --msgbox "\nThe program has been build successfully.\n" 12 80 \
+								 2>&1 >/dev/tty ;;
+							*) dialog --backtitle "${ide} :: ${project} [${language}]" \
+								 --title "Build project" \
+								 --textbox "$outFile" 25 80 \
+								 2>&1 >/dev/tty ;;
+						esac
+						infoProject
+					else
+						dialog	--backtitle "${ide} :: ${project} [${language}]" \
+							--title "ERROR" \
+							--msgbox "\nCan't find something to execute." 12 80 \
+							2>&1 >/dev/tty
+						infoProject
+					fi
+				fi
+			fi
+		fi
+	fi
+}
+
+#-----------------------------------------------------------------------
+# pause()
+#-----------------------------------------------------------------------
+function pause {
+	read -p "Press any key to continue..." -n1 -s
+}
+
+#-----------------------------------------------------------------------
+# runProgram()
+#-----------------------------------------------------------------------
+function runProgram {
+	cd "$project"
+	runFile="${project}/_run"
+	if [ -f "$runFile" ]; then
+		clear
+		$runfile
+		pause
+	else
+		binFile=`basename ${project}`
+		if [ -f "$binFile" ]; then
+			if [ -x "$binFile" ]; then
+				clear
+				${project}/$binFile
+				pause
+			else
+				dialog --backtitle "${ide} :: ${project} [${language}]" \
+					 --title "ERROR" \
+					 --msgbox "\nCan't execute :\n\n$binFile" 12 80 \
+					 2>&1 >/dev/tty
+			fi
+		else
+			pyFile=`basename ${project}.py`
+			if [ -f "$pyFile" ]; then
+				clear
+				python ${project}/$pyFile
+				pause
+			else
+				javaClass=`basename ${project}.class`
+				if [ -f "$javaClass" ]; then
+					clear
+					java -cp . $javaClass
+					pause
+				else
+					goFile=`basename ${project}.go`
+					if [ -f "$goFile" ]; then
+						clear
+						go run .
+						pause
+					else
+						rustFile="Cargo.toml"
+						if [ -f "$rustFile" ]; then
+							clear
+							cargo run
+							pause
+						else
+							dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+								--title "ERROR" \
+								--msgbox "\nCan't find something to execute." 12 80 \
+								2>&1 >/dev/tty
+						fi
+					fi
+				fi
+			fi 
+		fi
+	fi
+}
+
+#-----------------------------------------------------------------------
+# customizeBuild()
+#-----------------------------------------------------------------------
+function customizeBuild {
+	outFile=`mktemp`
+	binFile=`basename ${project}`
+	buildFile="${project}/_build"
+	if [ ! -f $buildFile ]; then
+		cat > "$buildFile" <<EOF
+#!/bin/bash
+
+gcc -o $binFile myfile.c
+EOF
+	chmod +x "${buildFile}"
+	fi
+	dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+			--title "Customizing Build command" \
+			--editbox $buildFile 10 60 2> "${outFile}"
+	rc=$?
+	if [ $rc -eq 0 ]; then
+		cp "${outFile}" "${buildFile}"
+		chmod +x "${buildFile}"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# customizeRun()
+#-----------------------------------------------------------------------
+function customizeRun {
+	outFile=`mktemp`
+	binFile=`basename ${project}`
+	runFile="${project}/_run"
+	if [ ! -f $runFile ]; then
+		cat > "$runFile" <<EOF
+#!/bin/bash
+
+$project/$binFile
+EOF
+	chmod +x "${runFile}"
+	fi
+	dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+			--title "Customizing Run command" \
+			--editbox $runFile 10 60 2> "${outFile}"
+	rc=$?
+	if [ $rc -eq 0 ]; then
+		cp "${outFile}" "${runFile}"
+		chmod +x "${runFile}"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# customizeBuildRun()
+#-----------------------------------------------------------------------
+function customizeBuildRun {
+	itemsBuildRun=(	1 "Customize Build"
+			2 "Customize Run")
+	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+					 --title "Customize Build & Run" \
+					 --menu "" 12 40 10 "${itemsBuildRun[@]}" \
+					 2>&1 >/dev/tty)	
+		do
+		case $choice in
+			1) customizeBuild ;;
+			2) customizeRun ;;
+			*) ;; # some action on other
+		esac
+	done		
+}
+
+#-----------------------------------------------------------------------
+# menuBuildRun()
+#-----------------------------------------------------------------------
+function menuBuildRun {
+	itemsBuildRun=(	1 "Build"
+			2 "Run"
+			3 "Customize")
+	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+					 --title "Build & Run" \
+					 --menu "" 12 40 10 "${itemsBuildRun[@]}" \
+					 2>&1 >/dev/tty)	
+		do
+		case $choice in
+			1) buildProgram ;;
+			2) runProgram ;;
+			3) customizeBuildRun ;;
+			*) ;; # some action on other
+		esac
+	done	
+}
+
+#-----------------------------------------------------------------------
+# menuGIT()
+#-----------------------------------------------------------------------
+function menuGIT {
+	echo "Hello"
+}
+
+#-----------------------------------------------------------------------
+# menuProject()
+#-----------------------------------------------------------------------
+function menuProject {
+	itemsProject=(1 "Open project"
+				  2 "New project"
+				  3 "Info"
+				  4 "Archive project")
+	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+					 --title "Project" \
+					 --menu "" 12 40 10 "${itemsProject[@]}" \
+					 2>&1 >/dev/tty)	
+		do
+		case $choice in
+			1) openProject ;;
+			2) newProject ;;
+			3) infoProject ;;
+			4) archiveProject ;;
+			*) ;; # some action on other
+		esac
+	done	
+}
+
+#-----------------------------------------------------------------------
+# menuExit()
+#-----------------------------------------------------------------------
+function menuExit {
+	dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+		--title "Exiting" \
+		--yesno "Are you sure you want to exit ?" 7 60
+	response=$?
+	case $response in
+		0) doloop=0 ;;
+		*) ;;
+	esac
+}
+
+
+#-----------------------------------------------------------------------
+# main()
+#-----------------------------------------------------------------------
+items=(1 "Project"
+       2 "Files"
+       3 "Build and Run"
+       4 "GIT"
+       5 "Exit")
+
+ide=$(basename $0)
+project=$PWD
+language="UNKNOWN"
+doloop=1
+while [ $doloop -eq 1 ]
+do
+	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+					 --title "Main Menu" \
+					 --menu "" 12 40 10 "${items[@]}" \
+					 2>&1 >/dev/tty)	
+	do
+		case $choice in
+			1) menuProject ;;
+			2) menuFiles ;;
+			3) menuBuildRun ;;
+			4) menuGIT ;;
+			5) menuExit	 ;;
+			*) ;; # some action on other
+		esac
+		if [[ $doloop -eq 0 ]]; then
+			break
+		fi
+	done
+done
+clear # Exiting
+echo "${ide} :: Exiting at $(date '+%d/%m/%Y %H:%M:%S')."
