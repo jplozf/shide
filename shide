@@ -467,12 +467,15 @@ function newFileHTML {
 		mainFileX="${new}.html"
 		fullFileX="${project}/${mainFileX}"
 		cat > "$fullFileX" <<EOF
-#include <iostream>
-
-int main() {
-	std::cout << "Hello, World.\n";
-	return 0;
-}
+<!doctype html>
+<html>
+  <head>
+    <title>This is the title of the webpage!</title>
+  </head>
+  <body>
+    <p>This is an example paragraph. Anything in the <strong>body</strong> tag will appear on the page, just like this <strong>p</strong> tag and its contents.</p>
+  </body>
+</html>
 EOF
 		$EDITOR "$fullFileX"
 	fi
@@ -492,12 +495,13 @@ function newFileXML {
 		mainFileX="${new}.xml"
 		fullFileX="${project}/${mainFileX}"
 		cat > "$fullFileX" <<EOF
-#include <iostream>
-
-int main() {
-	std::cout << "Hello, World.\n";
-	return 0;
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<note>
+  <to>Tove</to>
+  <from>Jani</from>
+  <heading>Reminder</heading>
+  <body>Don't forget me this weekend!</body>
+</note>
 EOF
 		$EDITOR "$fullFileX"
 	fi
@@ -759,6 +763,49 @@ if __name__ == "__main__":
 	main()
 EOF
 	chmod +x "$fullFileX"
+	createReadMe
+	$EDITOR "$fullFileX"
+}
+
+#-----------------------------------------------------------------------
+# projectJAVA()
+#-----------------------------------------------------------------------
+function projectJAVA {
+	language="JAVA"
+	new=$(inputNewProjectName)
+	if [[ -z $new ]] then
+		return
+	else
+		mkdir "$new"
+		cd "$new"
+		project=$PWD
+		chooseLicense
+	fi
+	class=`basename ${project}`
+	mainFileX=`basename ${project}.java`
+	fullFileX="${project}/${mainFileX}"
+	cat > "$fullFileX" <<EOF
+public final class ${class}
+{
+   /** Constructor. */
+   public ${class}()
+   {
+	   System.out.println("Hello World.");
+   }
+
+   public static void main(String[] args) throws Exception
+   {
+      new ${class}();
+   }
+}
+EOF
+	mkdir "META-INF"
+	manifest="${project}/META-INF/MANIFEST.MF"
+	cat > "$manifest" <<EOF
+Manifest-Version: 1.0
+Main-Class: ${class}
+Built-By: ${ide}
+EOF
 	createReadMe
 	$EDITOR "$fullFileX"
 }
@@ -1138,9 +1185,12 @@ function buildProgram {
 			infoProject
 		else
 			javaFile=`basename ${project}.java`
+			jarFile=`basename ${project}.jar`
+			classFile=`basename ${project}.class`
 			if [ -f "$javaFile" ]; then
 				clear
 				javac -cp . $javaFile
+				jar cvmf META-INF/MANIFEST.MF ${jarFile} ${classFile}
 				pause
 			else
 				goFile=`basename ${project}.go`
@@ -1179,7 +1229,7 @@ function buildProgram {
 					else
 						dialog	--backtitle "${ide} :: ${project} [${language}]" \
 							--title "ERROR" \
-							--msgbox "\nCan't find something to execute." 12 80 \
+							--msgbox "\nCan't find something to build." 12 80 \
 							2>&1 >/dev/tty
 						infoProject
 					fi
@@ -1194,6 +1244,79 @@ function buildProgram {
 #-----------------------------------------------------------------------
 function pause {
 	read -p "Press any key to continue..." -n1 -s
+}
+
+#-----------------------------------------------------------------------
+# buildRunProgram()
+#-----------------------------------------------------------------------
+function buildRunProgram {
+	cd "$project"
+	buildFile="${project}/_build"
+	if [ -f "$buildFile" ]; then
+		outFile=`mktemp`
+		$buildFile > $outFile 2>&1
+		ec=$?
+		case $ec in
+			0) runProgram ;;
+			*) dialog --backtitle "${ide} :: ${project}" \
+				 --title "Build project" \
+				 --textbox "$outFile" 25 80 \
+				 2>&1 >/dev/tty 
+			   infoProject ;;
+		esac
+		
+	else
+		pyFile=`basename ${project}.py`
+		if [ -f "$pyFile" ]; then
+			runProgram
+		else
+			javaFile=`basename ${project}.java`
+			jarFile=`basename ${project}.jar`
+			classFile=`basename ${project}.class`
+			if [ -f "$javaFile" ]; then
+				clear
+				javac -cp . $javaFile
+				jar cvmf META-INF/MANIFEST.MF ${jarFile} ${classFile}
+				runProgram
+			else
+				goFile=`basename ${project}.go`
+				if [ -f "$goFile" ]; then
+					outFile=`mktemp`
+					go build . > $outFile 2>&1
+					ec=$?
+					case $ec in
+						0) runProgram ;;
+						*) dialog --backtitle "${ide} :: ${project} [${language}]" \
+							 --title "Build project" \
+							 --textbox "$outFile" 25 80 \
+							 2>&1 >/dev/tty
+						   infoProject ;;
+					esac
+				else
+					rustFile="Cargo.toml"
+					if [ -f "$rustFile" ]; then
+						outFile=`mktemp`
+						cargo build > $outFile 2>&1
+						ec=$?
+						case $ec in
+							0) runProgram ;;
+							*) dialog --backtitle "${ide} :: ${project} [${language}]" \
+								 --title "Build project" \
+								 --textbox "$outFile" 25 80 \
+								 2>&1 >/dev/tty
+							   infoProject ;;
+						esac						
+					else
+						dialog	--backtitle "${ide} :: ${project} [${language}]" \
+							--title "ERROR" \
+							--msgbox "\nCan't find something to build and run." 12 80 \
+							2>&1 >/dev/tty
+						infoProject
+					fi
+				fi
+			fi
+		fi
+	fi
 }
 
 #-----------------------------------------------------------------------
@@ -1226,10 +1349,10 @@ function runProgram {
 				python ${project}/$pyFile
 				pause
 			else
-				javaClass=`basename ${project}.class`
-				if [ -f "$javaClass" ]; then
+				javaJar=`basename ${project}.jar`
+				if [ -f "$javaJar" ]; then
 					clear
-					java -cp . $javaClass
+					java -jar ${javaJar}
 					pause
 				else
 					goFile=`basename ${project}.go`
@@ -1331,7 +1454,8 @@ function customizeBuildRun {
 function menuBuildRun {
 	itemsBuildRun=(	1 "Build"
 			2 "Run"
-			3 "Customize")
+			3 "Build & Run"
+			4 "Customize")
 	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
 					 --title "Build & Run" \
 					 --menu "" 12 40 10 "${itemsBuildRun[@]}" \
@@ -1340,17 +1464,81 @@ function menuBuildRun {
 		case $choice in
 			1) buildProgram ;;
 			2) runProgram ;;
-			3) customizeBuildRun ;;
+			3) buildRunProgram ;;
+			4) customizeBuildRun ;;
 			*) ;; # some action on other
 		esac
 	done	
 }
 
 #-----------------------------------------------------------------------
+# gitStatus()
+#-----------------------------------------------------------------------
+function gitStatus {
+	outFile=`mktemp`
+	git status &> $outFile
+	dialog --backtitle "${ide} :: ${project} [${language}]" \
+			 --title "GIT Status" \
+			 --textbox "$outFile" 25 100 \
+			 2>&1 >/dev/tty
+}
+
+#-----------------------------------------------------------------------
+# gitCommit()
+#-----------------------------------------------------------------------
+function gitCommit {
+	outFile=`mktemp`
+	msg=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+				 --title "GIT Commit" \
+				 --inputbox "Please, enter the Commit message :" 12 40 \
+				 2>&1 >/dev/tty)
+	git commit -a -m "${msg}" &> $outFile
+	dialog --backtitle "${ide} :: ${project} [${language}]" \
+		 --title "GIT Commit" \
+		 --textbox "$outFile" 25 100 \
+		 2>&1 >/dev/tty
+}
+
+#-----------------------------------------------------------------------
+# gitPush()
+#-----------------------------------------------------------------------
+function gitPush {
+	outFile=`mktemp`
+	branch="$(git rev-parse --abbrev-ref HEAD)"
+	git push origin ${branch} &> $outFile
+	dialog --backtitle "${ide} :: ${project} [${language}]" \
+		 --title "GIT Push" \
+		 --textbox "$outFile" 25 100 \
+		 2>&1 >/dev/tty
+}
+
+#-----------------------------------------------------------------------
 # menuGIT()
 #-----------------------------------------------------------------------
 function menuGIT {
-	echo "Hello"
+	itemsGIT=(1 "Status"
+				  2 "Commit"
+				  3 "Push"
+				  4 "Commit & Push"
+				  5 "Fetch"
+				  6 "Pull (Fetch & Merge)"
+				  7 "Intialize")
+	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+					 --title "GIT" \
+					 --menu "" 15 40 10 "${itemsGIT[@]}" \
+					 2>&1 >/dev/tty)	
+		do
+		case $choice in
+			1) gitStatus ;;
+			2) gitCommit ;;
+			3) gitPush ;;
+			4) gitCommitPush ;;
+			5) gitFetch ;;
+			6) gitPull ;;
+			7) gitInit ;;
+			*) ;; # some action on other
+		esac
+	done	
 }
 
 #-----------------------------------------------------------------------
@@ -1403,6 +1591,7 @@ items=(1 "Project"
 ide=$(basename $0)
 project=$PWD
 language="UNKNOWN"
+guessLanguage
 doloop=1
 while [ $doloop -eq 1 ]
 do
