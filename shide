@@ -1,6 +1,6 @@
 #!/bin/bash
 #-----------------------------------------------------------------------
-# ShIDE :: A Small IDE for shell context
+# ShIDE :: A small IDE for Shell context
 # JPL 20250222
 #-----------------------------------------------------------------------
 
@@ -176,7 +176,7 @@ function chooseLicense {
 #-----------------------------------------------------------------------
 function createReadMe {
 	fileReadMe="${project}/README.md"
-	projectName=`basename ${project}`
+	projectName=`basename "${project}"`
 	cat > "$fileReadMe" <<EOF
 # ${projectName}
 
@@ -190,6 +190,98 @@ function createReadMe {
 
 EOF
 }
+
+#-----------------------------------------------------------------------
+# createGitIgnore()
+#-----------------------------------------------------------------------
+function createGitIgnore {
+	fileGitIgnore="${project}/.gitignore"
+	cat > "$fileGitIgnore" <<EOF
+# This file is used to ignore files which are generated
+# ----------------------------------------------------------------------------
+
+github.key
+*~
+*.autosave
+*.a
+*.core
+*.moc
+*.o
+*.obj
+*.orig
+*.rej
+*.so
+*.so.*
+*_pch.h.cpp
+*_resource.rc
+*.qm
+.#*
+*.*#
+core
+!core/
+tags
+.DS_Store
+.directory
+*.debug
+Makefile*
+*.prl
+*.app
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+Thumbs.db
+*.res
+*.rc
+/.qmake.cache
+/.qmake.stash
+
+# qtcreator generated files
+*.pro.user*
+*.qbs.user*
+CMakeLists.txt.user*
+
+# xemacs temporary files
+*.flc
+
+# Vim temporary files
+.*.swp
+
+# Visual Studio generated files
+*.ib_pdb_index
+*.idb
+*.ilk
+*.pdb
+*.sln
+*.suo
+*.vcproj
+*vcproj.*.*.user
+*.ncb
+*.sdf
+*.opensdf
+*.vcxproj
+*vcxproj.*
+
+# MinGW generated files
+*.Debug
+*.Release
+
+# Python byte code
+*.pyc
+
+# Binaries
+# --------
+*.dll
+*.exe
+
+# Directories with generated files
+.moc/
+.obj/
+.pch/
+.rcc/
+.uic/
+/build*/
+EOF
+}	
 
 #-----------------------------------------------------------------------
 # openFile()
@@ -355,25 +447,17 @@ function newFileJAVA {
 	if [[ -z "$new" ]] then
 		return
 	else
+		class=`basename ${new}`
 		mainFileX="${new}.java"
 		fullFileX="${project}/${mainFileX}"
 		cat > "$fullFileX" <<EOF
-package MyPackage;
-
-/** class MyApp.
-*/
-public final class MyApp
+public final class ${class}
 {
    /** Constructor. */
-   public MyApp()
+   public ${class}()
    {
+	   System.out.println("Hello World.");
    }
-
-   public static void main(String[] args) throws Exception
-   {
-      new MyApp();
-   }
-
 }
 EOF
 		$EDITOR "$fullFileX"
@@ -746,7 +830,7 @@ function projectPYTHON {
 		project=$PWD
 		chooseLicense
 	fi
-	mainFileX=`basename ${project}.py`
+	mainFileX=`basename "${project}".py`
 	fullFileX="${project}/${mainFileX}"
 	cat > "$fullFileX" <<EOF
 #!/usr/bin/env python
@@ -781,8 +865,8 @@ function projectJAVA {
 		project=$PWD
 		chooseLicense
 	fi
-	class=`basename ${project}`
-	mainFileX=`basename ${project}.java`
+	class=`basename "${project}"`
+	mainFileX=`basename "${project}".java`
 	fullFileX="${project}/${mainFileX}"
 	cat > "$fullFileX" <<EOF
 public final class ${class}
@@ -823,7 +907,7 @@ function projectCRaw {
 		project=$PWD
 		chooseLicense
 	fi
-	mainFileH=`basename ${project}.h`
+	mainFileH=`basename "${project}".h`
 	fullFileH="${project}/${mainFileH}"
 	includeH=$(toUpper $mainFileH | tr '.' '_')
 	cat > "$fullFileH" <<EOF
@@ -832,7 +916,7 @@ function projectCRaw {
 
 #endif
 EOF
-	mainFileC=`basename ${project}.c`
+	mainFileC=`basename "${project}".c`
 	fullFileC="${project}/${mainFileC}"
 	cat > "$fullFileC" <<EOF
 #include "$mainFileH"
@@ -843,7 +927,7 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 EOF
-	binFile=`basename ${project}`
+	binFile=`basename "${project}"`
 	buildFile="${project}/_build"
 	cat > "$buildFile" <<EOF
 #!/bin/bash
@@ -868,7 +952,7 @@ function projectCPPRaw {
 		project=$PWD
 		chooseLicense
 	fi
-	mainFileH=`basename ${project}.h`
+	mainFileH=`basename "${project}".h`
 	fullFileH="${project}/${mainFileH}"
 	includeH=$(toUpper $mainFileH | tr '.' '_')
 	cat > "$fullFileH" <<EOF
@@ -877,7 +961,7 @@ function projectCPPRaw {
 
 #endif
 EOF
-	mainFileCPP=`basename ${project}.cpp`
+	mainFileCPP=`basename "${project}".cpp`
 	fullFileCPP="${project}/${mainFileCPP}"
 	cat > "$fullFileCPP" <<EOF
 #include "$mainFileH"
@@ -888,7 +972,7 @@ int main() {
   return 0;
 }
 EOF
-	binFile=`basename ${project}`
+	binFile=`basename "${project}"`
 	buildFile="${project}/_build"
 	cat > "$buildFile" <<EOF
 #!/bin/bash
@@ -913,7 +997,7 @@ function projectCNCurses {
 		project=$PWD
 		chooseLicense
 	fi
-	mainFileH=`basename ${project}.h`
+	mainFileH=`basename "${project}".h`
 	fullFileH="${project}/${mainFileH}"
 	includeH=$(toUpper $mainFileH | tr '.' '_')
 	cat > "$fullFileH" <<EOF
@@ -922,7 +1006,7 @@ function projectCNCurses {
 
 #endif
 EOF
-	mainFileC=`basename ${project}.c`
+	mainFileC=`basename "${project}".c`
 	fullFileC="${project}/${mainFileC}"
 	cat > "$fullFileC" <<EOF
 #include "$mainFileH"
@@ -937,7 +1021,7 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 EOF
-	binFile=`basename ${project}`
+	binFile=`basename "${project}"`
 	buildFile="${project}/_build"
 	cat > "$buildFile" <<EOF
 #!/bin/bash
@@ -985,9 +1069,9 @@ function projectGO {
 		project=$PWD
 		chooseLicense
 	fi
-	mainModule=`basename ${project}`
+	mainModule=`basename "${project}"`
 	go mod init $mainModule
-	mainFileGO=`basename ${project}.go`
+	mainFileGO=`basename "${project}".go`
 	fullFileGO="${project}/${mainFileGO}"
 	cat > "$fullFileGO" <<EOF
 package main
@@ -1085,7 +1169,7 @@ function newProject {
 #-----------------------------------------------------------------------
 function infoProject {
 	outFile=`mktemp`
-	rawProject=`basename ${project}`
+	rawProject=`basename "${project}"`
 	tree -Dh > $outFile
 	cloc ./ >> $outFile
 	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
@@ -1176,7 +1260,7 @@ function buildProgram {
 		esac
 		infoProject
 	else
-		pyFile=`basename ${project}.py`
+		pyFile=`basename "${project}".py`
 		if [ -f "$pyFile" ]; then
 			dialog --backtitle "${ide} :: ${project} [${language}]" \
 				 --title "Build project" \
@@ -1184,16 +1268,16 @@ function buildProgram {
 				 2>&1 >/dev/tty
 			infoProject
 		else
-			javaFile=`basename ${project}.java`
-			jarFile=`basename ${project}.jar`
-			classFile=`basename ${project}.class`
+			javaFile=`basename "${project}".java`
+			jarFile=`basename "${project}".jar`
+			classFile=`basename "${project}".class`
 			if [ -f "$javaFile" ]; then
 				clear
 				javac -cp . $javaFile
 				jar cvmf META-INF/MANIFEST.MF ${jarFile} ${classFile}
 				pause
 			else
-				goFile=`basename ${project}.go`
+				goFile=`basename "${project}".go`
 				if [ -f "$goFile" ]; then
 					outFile=`mktemp`
 					go build . > $outFile 2>&1
@@ -1266,20 +1350,20 @@ function buildRunProgram {
 		esac
 		
 	else
-		pyFile=`basename ${project}.py`
+		pyFile=`basename "${project}".py`
 		if [ -f "$pyFile" ]; then
 			runProgram
 		else
-			javaFile=`basename ${project}.java`
-			jarFile=`basename ${project}.jar`
-			classFile=`basename ${project}.class`
+			javaFile=`basename "${project}".java`
+			jarFile=`basename "${project}".jar`
+			classFile=`basename "${project}".class`
 			if [ -f "$javaFile" ]; then
 				clear
 				javac -cp . $javaFile
 				jar cvmf META-INF/MANIFEST.MF ${jarFile} ${classFile}
 				runProgram
 			else
-				goFile=`basename ${project}.go`
+				goFile=`basename "${project}".go`
 				if [ -f "$goFile" ]; then
 					outFile=`mktemp`
 					go build . > $outFile 2>&1
@@ -1330,7 +1414,7 @@ function runProgram {
 		$runfile
 		pause
 	else
-		binFile=`basename ${project}`
+		binFile=`basename "${project}"`
 		if [ -f "$binFile" ]; then
 			if [ -x "$binFile" ]; then
 				clear
@@ -1343,19 +1427,19 @@ function runProgram {
 					 2>&1 >/dev/tty
 			fi
 		else
-			pyFile=`basename ${project}.py`
+			pyFile=`basename "${project}".py`
 			if [ -f "$pyFile" ]; then
 				clear
 				python ${project}/$pyFile
 				pause
 			else
-				javaJar=`basename ${project}.jar`
+				javaJar=`basename "${project}".jar`
 				if [ -f "$javaJar" ]; then
 					clear
 					java -jar ${javaJar}
 					pause
 				else
-					goFile=`basename ${project}.go`
+					goFile=`basename "${project}".go`
 					if [ -f "$goFile" ]; then
 						clear
 						go run .
@@ -1384,7 +1468,7 @@ function runProgram {
 #-----------------------------------------------------------------------
 function customizeBuild {
 	outFile=`mktemp`
-	binFile=`basename ${project}`
+	binFile=`basename "${project}"`
 	buildFile="${project}/_build"
 	if [ ! -f $buildFile ]; then
 		cat > "$buildFile" <<EOF
@@ -1409,7 +1493,7 @@ EOF
 #-----------------------------------------------------------------------
 function customizeRun {
 	outFile=`mktemp`
-	binFile=`basename ${project}`
+	binFile=`basename "${project}"`
 	runFile="${project}/_run"
 	if [ ! -f $runFile ]; then
 		cat > "$runFile" <<EOF
@@ -1513,6 +1597,127 @@ function gitPush {
 }
 
 #-----------------------------------------------------------------------
+# gitCommitPush()
+#-----------------------------------------------------------------------
+function gitCommitPush {
+	outFile=`mktemp`
+	msg=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+				 --title "GIT Commit & Push" \
+				 --inputbox "\nPlease, enter the Commit message :" 12 40 \
+				 2>&1 >/dev/tty)
+		git commit -a -m "${msg}" &> $outFile
+	branch="$(git rev-parse --abbrev-ref HEAD)"
+	git push origin ${branch} &>> $outFile
+	dialog --backtitle "${ide} :: ${project} [${language}]" \
+		 --title "GIT Commit & Push" \
+		 --textbox "$outFile" 25 100 \
+		 2>&1 >/dev/tty
+}
+
+#-----------------------------------------------------------------------
+# gitConfigUser()
+#-----------------------------------------------------------------------
+function gitConfigUser {
+	if [ -e "$HOME/.github.user" ]; then
+		tmpuser=$(< $HOME/.github.user)
+	else
+		tmpuser=$USER
+	fi
+	gituser=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			 --title "GIT Config" \
+			 --inputbox "\nPlease, enter your Github user :" 12 40 ${tmpuser} \
+			 2>&1 >/dev/tty)
+	echo ${gituser} > ~/.github.user
+}
+
+#-----------------------------------------------------------------------
+# gitConfigKey()
+#-----------------------------------------------------------------------
+function gitConfigKey {
+	if [ -e "$HOME/.github.key" ]; then
+		tmpkey=$(< $HOME/.github.key)
+	fi
+	gitkey=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			 --title "GIT Config" \
+			 --inputbox "\nPlease, enter your Github key :" 12 50 ${tmpkey} \
+			 2>&1 >/dev/tty)
+	echo ${gitkey} > ~/.github.key
+}
+
+#-----------------------------------------------------------------------
+# gitBang()
+#-----------------------------------------------------------------------
+function gitBang {
+	pjname=`basename "${project}"`
+	dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+		--title "GIT Bang" \
+		--yesno "\nThis will initialize a GIT environment for your project [${pjname}].\n\nAre you sure you want to proceed ?" 11 60
+	response=$?
+	case $response in
+		0)
+		if [ -e "$HOME/.github.user" ]; then
+			gituser=$(< $HOME/.github.user)
+		else
+			gitConfigUser
+		fi
+		dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+			--title "GIT Bang" \
+			--yesno "\nThe following repository should already exist :\n\nhttps://github.com/${gituser}/${pjname}\n\nHas the repository already been created ?" 13 60
+		response=$?
+		case $response in
+			0) 		
+			url="https://$(< $HOME/.github.key)@github.com/${gituser}/${pjname}"
+			git add .
+			git commit -m "First Commit"
+			git remote add origin ${url}
+			git branch -M main
+
+			git pull --rebase origin main
+
+			git push -u origin main
+
+			# README.md file
+			if [ ! -f "README.md" ]; then
+				createReadMe
+				git add README.md
+			fi
+
+			# .gitignore file
+			if [ ! -f ".gitignore" ]; then
+				createGitIgnore
+				git add .gitignore
+			fi
+
+			git status
+			;;
+			
+			*) ;;
+		esac ;;
+
+		*) ;;
+	esac
+}
+
+#-----------------------------------------------------------------------
+# gitConfigure()
+#-----------------------------------------------------------------------
+function gitConfigure {
+	itemsGIT=(1 "Configure user"
+		      2 "Configure key")
+	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+					 --title "GIT Configure" \
+					 --menu "" 15 40 10 "${itemsGIT[@]}" \
+					 2>&1 >/dev/tty)	
+		do
+		case $choice in
+			1) gitConfigUser ;;
+			2) gitConfigKey ;;
+			*) ;; # some action on other
+		esac
+	done	
+}
+
+#-----------------------------------------------------------------------
 # menuGIT()
 #-----------------------------------------------------------------------
 function menuGIT {
@@ -1522,7 +1727,8 @@ function menuGIT {
 				  4 "Commit & Push"
 				  5 "Fetch"
 				  6 "Pull (Fetch & Merge)"
-				  7 "Intialize")
+				  7 "Initialize (GIT Bang)"
+				  8 "Configure")
 	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
 					 --title "GIT" \
 					 --menu "" 15 40 10 "${itemsGIT[@]}" \
@@ -1535,7 +1741,8 @@ function menuGIT {
 			4) gitCommitPush ;;
 			5) gitFetch ;;
 			6) gitPull ;;
-			7) gitInit ;;
+			7) gitBang ;;
+			8) gitConfigure ;;
 			*) ;; # some action on other
 		esac
 	done	
