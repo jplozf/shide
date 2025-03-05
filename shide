@@ -1622,8 +1622,8 @@ function gitCommitPush {
 # gitConfigUser()
 #-----------------------------------------------------------------------
 function gitConfigUser {
-	if [ -e "$HOME/.github.user" ]; then
-		tmpuser=$(< $HOME/.github.user)
+	if [ -e "$configDir/.github.user" ]; then
+		tmpuser=$(< $configDir/.github.user)
 	else
 		tmpuser=$USER
 	fi
@@ -1631,21 +1631,21 @@ function gitConfigUser {
 			 --title "GIT Config" \
 			 --inputbox "\nPlease, enter your Github user :" 12 40 ${tmpuser} \
 			 2>&1 >/dev/tty)
-	echo ${gituser} > ~/.github.user
+	echo ${gituser} > $configDir/.github.user
 }
 
 #-----------------------------------------------------------------------
 # gitConfigKey()
 #-----------------------------------------------------------------------
 function gitConfigKey {
-	if [ -e "$HOME/.github.key" ]; then
-		tmpkey=$(< $HOME/.github.key)
+	if [ -e "$configDir/.github.key" ]; then
+		tmpkey=$(< $configDir/.github.key)
 	fi
 	gitkey=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
 			 --title "GIT Config" \
 			 --inputbox "\nPlease, enter your Github key :" 12 50 ${tmpkey} \
 			 2>&1 >/dev/tty)
-	echo ${gitkey} > ~/.github.key
+	echo ${gitkey} > $configDir/.github.key
 }
 
 #-----------------------------------------------------------------------
@@ -1659,8 +1659,8 @@ function gitBang {
 	response=$?
 	case $response in
 		0)
-		if [ -e "$HOME/.github.user" ]; then
-			gituser=$(< $HOME/.github.user)
+		if [ -e "$configDir/.github.user" ]; then
+			gituser=$(< $configDir/.github.user)
 		else
 			gitConfigUser
 		fi
@@ -1670,7 +1670,7 @@ function gitBang {
 		response=$?
 		case $response in
 			0) 		
-			url="https://$(< $HOME/.github.key)@github.com/${gituser}/${pjname}"
+			url="https://$(< $configDir/.github.key)@github.com/${gituser}/${pjname}"
 			git add .
 			git commit -m "First Commit"
 			git remote add origin ${url}
@@ -1789,7 +1789,6 @@ function menuExit {
 	esac
 }
 
-
 #-----------------------------------------------------------------------
 # main()
 #-----------------------------------------------------------------------
@@ -1800,9 +1799,13 @@ items=(1 "Project"
        5 "Exit")
 
 ide=$(basename $0)
+configDir=$HOME/.${ide}
 project=$PWD
 language="UNKNOWN"
 guessLanguage
+if [[ ! -e "$configDir" ]] then
+	mkdir $configDir
+fi
 doloop=1
 while [ $doloop -eq 1 ]
 do
