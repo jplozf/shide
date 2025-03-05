@@ -2,7 +2,7 @@
 
 A small IDE for Shell context.
 
-## Pre-requisites
+## Prerequisites
 
 * dialog
 * GIT
