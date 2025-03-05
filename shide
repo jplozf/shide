@@ -1560,7 +1560,11 @@ function menuBuildRun {
 #-----------------------------------------------------------------------
 function gitStatus {
 	outFile=`mktemp`
-	git status &> $outFile
+	echo "Current commit : " $(git rev-parse --short HEAD) &> $outFile
+	echo -e "\n" >> $outFile
+	git status &>> $outFile
+	echo -e "\n" >> $outFile
+	git diff &>> $outFile
 	dialog --backtitle "${ide} :: ${project} [${language}]" \
 			 --title "GIT Status" \
 			 --textbox "$outFile" 25 100 \
@@ -1605,7 +1609,7 @@ function gitCommitPush {
 				 --title "GIT Commit & Push" \
 				 --inputbox "\nPlease, enter the Commit message :" 12 40 \
 				 2>&1 >/dev/tty)
-		git commit -a -m "${msg}" &> $outFile
+	git commit -a -m "${msg}" &> $outFile
 	branch="$(git rev-parse --abbrev-ref HEAD)"
 	git push origin ${branch} &>> $outFile
 	dialog --backtitle "${ide} :: ${project} [${language}]" \
@@ -1683,7 +1687,7 @@ function gitBang {
 			fi
 
 			# .gitignore file
-			if [ ! -f ".gitignore" ]; then
+			if [ ! -e ".gitignore" ]; then
 				createGitIgnore
 				git add .gitignore
 			fi
