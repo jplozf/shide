@@ -775,6 +775,13 @@ function menuFiles {
 }
 
 #-----------------------------------------------------------------------
+# updateMRUProjects()
+#-----------------------------------------------------------------------
+function updateMRUProjects {
+	echo
+}
+
+#-----------------------------------------------------------------------
 # openProject()
 #-----------------------------------------------------------------------
 function openProject {
@@ -802,6 +809,8 @@ function openProject {
 			openProject
 		fi
 		guessLanguage
+	else
+		updateMRUProjects
 	fi
 }
 
@@ -1631,7 +1640,10 @@ function gitConfigUser {
 			 --title "GIT Config" \
 			 --inputbox "\nPlease, enter your Github user :" 12 40 ${tmpuser} \
 			 2>&1 >/dev/tty)
-	echo ${gituser} > $configDir/.github.user
+	button=$?
+	if [ $button -eq 0 ]; then
+		echo ${gituser} > $configDir/.github.user
+	fi
 }
 
 #-----------------------------------------------------------------------
@@ -1645,7 +1657,10 @@ function gitConfigKey {
 			 --title "GIT Config" \
 			 --inputbox "\nPlease, enter your Github key :" 12 50 ${tmpkey} \
 			 2>&1 >/dev/tty)
-	echo ${gitkey} > $configDir/.github.key
+	button=$?
+	if [ $button -eq 0 ]; then
+		echo ${gitkey} > $configDir/.github.key
+	fi
 }
 
 #-----------------------------------------------------------------------
