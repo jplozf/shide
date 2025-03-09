@@ -124,6 +124,578 @@ function licenseUnlicense {
 }
 
 #-----------------------------------------------------------------------
+# createThemeDarkYellowRed()
+#-----------------------------------------------------------------------
+function createThemeDarkYellowRed {
+	fileTheme="dialogrc-dark-yellow-red.txt"
+	if [ ! -e "$configDir/$fileTheme" ]; then
+		cat > "$configDir/$fileTheme" <<EOF
+#
+# Run-time configuration file for dialog
+#
+# Types of values:
+#
+# Number     -  <number>
+# String     -  "string"
+# Boolean    -  <ON|OFF>
+# Attribute  -  (foreground,background,highlight?)
+# 0 black, 1 red, 2 green, 3 yellow, 4 blue, 5 magenta, 6 cyan and 7 white
+
+# Set aspect-ratio
+aspect = 0
+
+# Set separator (for multiple widgets output)
+separate_widget = ""
+
+# Set tab-length (for textbox tab-conversion)
+tab_len = 0
+
+# Make tab-traversal for checklist, etc., include the list
+visit_items = OFF
+
+# Shadow dialog boxes? This also turns on color.
+use_shadow = ON
+
+# Turn color support ON or OFF
+use_colors = ON
+
+# Screen color
+screen_color = (YELLOW,BLACK,ON)
+
+# Shadow color
+shadow_color = (BLACK,BLACK,OFF)
+
+# Dialog box color
+dialog_color = (WHITE,BLACK,OFF)
+
+# Dialog box title color
+title_color = (YELLOW,BLACK,OFF)
+
+# Dialog box border color
+border_color = (RED,BLACK,ON)
+border2_color = (RED,BLACK,OFF)
+
+# Active button color
+button_active_color = (BLACK,YELLOW,OFF)
+
+# Inactive button color
+button_inactive_color = (WHITE,BLACK,OFF)
+
+# Active button key color
+button_key_active_color = (YELLOW,WHITE,OFF)
+
+# Inactive button key color
+button_key_inactive_color = (WHITE,BLACK,OFF)
+
+# Active button label color
+button_label_active_color = (BLACK,YELLOW,OFF)
+
+# Inactive button label color
+button_label_inactive_color = (YELLOW,BLACK,OFF)
+
+# Input box color
+inputbox_color = (WHITE,BLACK,OFF)
+
+# Input box border color
+inputbox_border_color = (WHITE,BLACK,OFF)
+inputbox_border2_color = (WHITE,BLACK,OFF)
+
+# Search box color
+searchbox_color = (WHITE,BLACK,OFF)
+
+# Search box title color
+searchbox_title_color = (WHITE,BLACK,OFF)
+
+# Search box border color
+searchbox_border_color = (BLACK,BLACK,OFF)
+searchbox_border2_color = (BLACK,BLACK,OFF)
+
+# File position indicator color
+position_indicator_color = (YELLOW,BLACK,OFF)
+
+# Menu box color
+menubox_color = (WHITE,BLACK,OFF)
+
+# Menu box border color
+menubox_border_color = (BLACK,BLACK,OFF)
+menubox_border2_color = (BLACK,BLACK,OFF)
+
+# Item color
+item_color = (WHITE,BLACK,OFF)
+
+# Selected item color
+item_selected_color = (BLACK,YELLOW,OFF)
+
+# Tag color
+tag_color = (WHITE,BLACK,OFF)
+
+# Selected tag color
+tag_selected_color = (BLACK,YELLOW,OFF)
+
+# Tag key color
+tag_key_color = (WHITE,BLACK,OFF)
+
+# Selected tag key color
+tag_key_selected_color = (YELLOW,BLACK,OFF)
+
+# Check box color
+check_color = (WHITE,BLACK,OFF)
+
+# Selected check box color
+check_selected_color = (WHITE,BLACK,OFF)
+
+# Up arrow color
+uarrow_color = (BLACK,YELLOW,OFF)
+
+# Down arrow color
+darrow_color = (BLACK,YELLOW,OFF)
+
+# Item help-text color
+itemhelp_color = (WHITE,BLACK,OFF)
+
+# Active form text color
+form_active_text_color = (BLACK,WHITE,OFF)
+
+# Form text color
+form_text_color = (WHITE,BLACK,OFF)
+
+# Readonly form item color
+form_item_readonly_color = (WHITE,BLACK,OFF)
+
+# Dialog box gauge color
+gauge_color = (WHITE,BLACK,OFF)
+EOF
+	fi
+}	
+
+#-----------------------------------------------------------------------
+# createThemeDarkYellowGreen()
+#-----------------------------------------------------------------------
+function createThemeDarkYellowGreen {
+	fileTheme="dialogrc-dark-yellow-green.txt"
+	if [ ! -e "$configDir/$fileTheme" ]; then
+		cat > "$configDir/$fileTheme" <<EOF
+# $Id: slackware.rc,v 1.2 2001/12/02 21:19:05 Patrick.J.Volkerding Exp $
+# Run-time configuration file for dialog, matches Slackware color scheme.
+#
+# Types of values:
+#
+# Number     -  <number>
+# String     -  "string"
+# Boolean    -  <ON|OFF>
+# Attribute  -  (foreground,background,highlight?)
+# edited by alislack
+
+# Set aspect-ration.
+aspect = 0
+
+# Set separator (for multiple widgets output).
+separate_widget = ""
+
+# Set tab-length (for textbox tab-conversion).
+tab_len = 0
+
+# Make tab-traversal for checklist, etc., include the list.
+visit_items = OFF
+
+# Shadow dialog boxes? This also turns on color.
+use_shadow = ON
+
+# Turn color support ON or OFF
+use_colors = ON
+
+# Screen color
+screen_color = (CYAN,BLACK,OFF)
+
+# Shadow color
+shadow_color = (WHITE,BLACK,OFF)
+
+# Dialog box color
+dialog_color = (GREEN,BLACK,ON)
+
+# Dialog box title color
+title_color = (YELLOW,BLACK,ON)
+
+# Dialog box border color
+border_color = (GREEN,BLACK,ON)
+
+# Active button color
+button_active_color = (WHITE,BLUE,ON)
+
+# Inactive button color
+button_inactive_color = (WHITE,BLACK,OFF)
+
+# Active button key color
+button_key_active_color = (WHITE,BLUE,ON)
+
+# Inactive button key color
+button_key_inactive_color = (CYAN,BLACK,OFF)
+
+# Active button label color
+button_label_active_color = (WHITE,BLUE,ON)
+
+# Inactive button label color
+button_label_inactive_color = (WHITE,BLACK,ON)
+
+# Input box color
+inputbox_color = (BLUE,WHITE,OFF)
+
+# Input box border color
+inputbox_border_color = (BLACK,BLACK,ON)
+
+# Search box color
+searchbox_color = (YELLOW,BLACK,ON)
+
+# Search box title color
+searchbox_title_color = (WHITE,WHITE,ON)
+
+# Search box border color
+searchbox_border_color = (RED,WHITE,OFF)
+
+# File position indicator color
+position_indicator_color = (YELLOW,BLACK,OFF)
+
+# Menu box color
+menubox_color = (GREEN,BLACK,OFF)
+
+# Menu box border color
+menubox_border_color = (GREEN,BLACK,ON)
+
+#
+# Item color
+item_color = (GREEN,BLACK,OFF)
+
+# Selected item color
+item_selected_color = (CYAN,BLACK,OFF)
+
+# Tag color
+tag_color = (YELLOW,BLACK,ON)
+
+# Selected tag color
+tag_selected_color = (WHITE,BLUE,OFF)
+
+# Tag key color
+tag_key_color = (CYAN,BLACK,OFF)
+
+# Selected tag key color
+tag_key_selected_color = (GREEN,BLUE,ON)
+
+# Check box color
+check_color = (CYAN,BLACK,OFF)
+
+# Selected check box color
+check_selected_color = (WHITE,CYAN,ON)
+
+# Up arrow color
+uarrow_color = (GREEN,BLUE,ON)
+
+# Down arrow color
+darrow_color = (GREEN,BLUE,ON)
+
+# Item help-text color
+itemhelp_color = (CYAN,BLACK,OFF)
+
+# alislack fix
+# border2 are the shadows arounds the boxes
+# change from dialog_color to GREEN,BLACK
+# to remove the shadow at bottom of screen
+#
+# Dialog box border2 color
+#border2_color = dialog_color
+border2_color = (GREEN,BLACK,OFF)
+
+# Input box border2 color
+inputbox_border2_color = (GREEN,BLACK,ON)
+
+# Search box border2 color
+searchbox_border2_color = (GREEN,BLACK,ON)
+
+# Menu box border2 color
+menubox_border2_color = (GREEN,BLACK,ON)
+EOF
+	fi
+}
+
+#-----------------------------------------------------------------------
+# createThemeOriginal()
+#-----------------------------------------------------------------------
+function createThemeOriginal {
+	fileTheme="dialogrc-original.txt"
+	if [ ! -e "$configDir/$fileTheme" ]; then
+		cat > "$configDir/$fileTheme" <<EOF
+# Run-time configuration file for dialog
+#
+# Automatically generated by "dialog --create-rc <file>"
+#
+#
+# Types of values:
+#
+# Number     -  <number>
+# String     -  "string"
+# Boolean    -  <ON|OFF>
+# Attribute  -  (foreground,background,highlight?)
+# Set aspect-ration.
+aspect = 0
+
+# Set separator (for multiple widgets output).
+separate_widget = ""
+
+# Set tab-length (for textbox tab-conversion).
+tab_len = 0
+
+# Make tab-traversal for checklist, etc., include the list.
+visit_items = OFF
+
+# Shadow dialog boxes? This also turns on color.
+use_shadow = ON
+
+# Turn color support ON or OFF
+use_colors = ON
+
+# Screen color
+screen_color = (CYAN,BLUE,ON)
+
+# Shadow color
+shadow_color = (BLACK,BLACK,ON)
+
+# Dialog box color
+dialog_color = (BLACK,WHITE,OFF)
+
+# Dialog box title color
+title_color = (BLUE,WHITE,ON)
+
+# Dialog box border color
+border_color = (WHITE,WHITE,ON)
+
+# Active button color
+button_active_color = (WHITE,BLUE,ON)
+
+# Inactive button color
+button_inactive_color = (BLACK,WHITE,OFF)
+
+# Active button key color
+button_key_active_color = (WHITE,BLUE,ON)
+
+# Inactive button key color
+button_key_inactive_color = (RED,WHITE,OFF)
+
+# Active button label color
+button_label_active_color = (YELLOW,BLUE,ON)
+
+# Inactive button label color
+button_label_inactive_color = (BLACK,WHITE,ON)
+
+# Input box color
+inputbox_color = (BLACK,WHITE,OFF)
+
+# Input box border color
+inputbox_border_color = (BLACK,WHITE,OFF)
+
+# Search box color
+searchbox_color = (BLACK,WHITE,OFF)
+
+# Search box title color
+searchbox_title_color = (BLUE,WHITE,ON)
+
+# Search box border color
+searchbox_border_color = (WHITE,WHITE,ON)
+
+# File position indicator color
+position_indicator_color = (BLUE,WHITE,ON)
+
+# Menu box color
+menubox_color = (BLACK,WHITE,OFF)
+
+# Menu box border color
+menubox_border_color = (WHITE,WHITE,ON)
+
+# Item color
+item_color = (BLACK,WHITE,OFF)
+
+# Selected item color
+item_selected_color = (WHITE,BLUE,ON)
+
+# Tag color
+tag_color = (BLUE,WHITE,ON)
+
+# Selected tag color
+tag_selected_color = (YELLOW,BLUE,ON)
+
+# Tag key color
+tag_key_color = (RED,WHITE,OFF)
+
+# Selected tag key color
+tag_key_selected_color = (RED,BLUE,ON)
+
+# Check box color
+check_color = (BLACK,WHITE,OFF)
+
+# Selected check box color
+check_selected_color = (WHITE,BLUE,ON)
+
+# Up arrow color
+uarrow_color = (GREEN,WHITE,ON)
+
+# Down arrow color
+darrow_color = (GREEN,WHITE,ON)
+
+# Item help-text color
+itemhelp_color = (WHITE,BLACK,OFF)
+
+# Active form text color
+form_active_text_color = (WHITE,BLUE,ON)
+
+# Form text color
+form_text_color = (WHITE,CYAN,ON)
+
+# Readonly form item color
+form_item_readonly_color = (CYAN,WHITE,ON)
+EOF
+	fi
+}
+
+#-----------------------------------------------------------------------
+# setTheme()
+#-----------------------------------------------------------------------
+function setTheme {
+	export DIALOGRC=${themeIDE}
+}
+
+#-----------------------------------------------------------------------
+# saveConfig()
+#-----------------------------------------------------------------------
+function saveConfig {
+	cat > "$configDir/$ide.conf" <<EOF
+themeIDE="${themeIDE}"
+userIDE="${userIDE}"
+mailIDE="${mailIDE}"
+confirmExitIDE=${confirmExitIDE}
+EOF
+}
+
+#-----------------------------------------------------------------------
+# readConfig()
+#-----------------------------------------------------------------------
+function readConfig {
+	if [ -e "$configDir/$ide.conf" ]; then
+		source "$configDir/$ide.conf"
+	else
+		themeIDE="$configDir/dialogrc-original.txt"
+		userIDE="$USER"
+		mailIDE="$USER@$(hostname)"
+		confirmExitIDE=true
+	fi
+	setTheme
+}
+
+#-----------------------------------------------------------------------
+# configureIDE()
+#-----------------------------------------------------------------------
+function configureTheme {
+	createThemeDarkYellowGreen
+	createThemeDarkYellowRed
+	createThemeOriginal
+	itemsThemes=( 	1 "Classic"
+				2 "Dark / Yellow / Green"
+				3 "Dark / Yellow / Red")
+					
+	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+				--title "Theme" \
+				--menu "" 12 40 10 "${itemsThemes[@]}" \
+				2>&1 >/dev/tty)
+		do
+		case $choice in
+			1) 	themeIDE="$configDir/dialogrc-original.txt" 
+				setTheme ;;
+			2) 	themeIDE="$configDir/dialogrc-dark-yellow-green.txt"
+				setTheme ;;
+			3) 	themeIDE="$configDir/dialogrc-dark-yellow-red.txt"
+				setTheme ;;
+			*) ;;
+		esac
+		break
+	done	
+}
+
+#-----------------------------------------------------------------------
+# configureUserName()
+#-----------------------------------------------------------------------
+function configureUserName {
+	if [ -z ${userIDE+x} ]; then
+		tmpUser=$USER
+	else
+		tmpUser="${userIDE}"
+	fi
+	varUser=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			 --title "User's name" \
+			 --inputbox "\nPlease, enter your user's name :" 12 40 "${tmpUser}" \
+			 2>&1 >/dev/tty)
+	button=$?
+	if [ $button -eq 0 ]; then
+		userIDE="${varUser}"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# configureMailAddress()
+#-----------------------------------------------------------------------
+function configureMailAddress {
+	if [ -z ${mailIDE+x} ]; then
+		tmpMail="$USER@$(hostname)"
+	else
+		tmpMail="${mailIDE}"
+	fi
+	varMail=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			 --title "Mail Address" \
+			 --inputbox "\nPlease, enter your mail address :" 12 40 "${tmpMail}" \
+			 2>&1 >/dev/tty)
+	button=$?
+	if [ $button -eq 0 ]; then
+		mailIDE="${varMail}"
+	fi
+}
+
+#-----------------------------------------------------------------------
+# configureConfirmExit()
+#-----------------------------------------------------------------------
+function configureConfirmExit {
+	dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+		--title "Confirm exit" \
+		--yesno "\nWould you like to confirm on exit ?\n\nCurrently, the value is ${confirmExitIDE}" 11 60
+	response=$?
+	case $response in
+		0) confirmExitIDE=true ;;
+		1) confirmExitIDE=false ;;
+		*) ;;
+	esac
+}
+
+#-----------------------------------------------------------------------
+# configureIDE()
+#-----------------------------------------------------------------------
+function configureIDE {
+	itemsConfig=( 1 "User name"
+				2 "Mail address"
+				3 "Theme"
+				4 "Confirmation on exit")
+					
+	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+				--title "IDE Configuration" \
+				--menu "" 12 40 10 "${itemsConfig[@]}" \
+				2>&1 >/dev/tty)
+		do
+		case $choice in
+			1) 	configureUserName ;;
+			2) 	configureMailAddress ;;
+			3) 	configureTheme ;;
+			4) 	configureConfirmExit ;;
+			*) ;;
+		esac
+		break
+	done
+}
+
+#-----------------------------------------------------------------------
 # chooseLicense()
 #-----------------------------------------------------------------------
 function chooseLicense {
@@ -335,14 +907,43 @@ function deleteFile {
 		else			# or a file ?
 			dialog 	--backtitle "${ide} :: ${project} [${language}]" \
 				--title "Deleting file" \
-				--yesno "Are you sure you want to delete the following file :\n\n$opt" 7 60
+				--yesno "Are you sure you want to delete the following file ?\n\n$opt" 7 60
 			response=$?
 			case $response in
-				0) rm "$opt" ;;
+				0) 
+				if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+					dialog --backtitle "${ide} :: ${project} [${language}]" \
+						--title "Deleting file from GIT" \
+						--yesno "Do you wish to remove this file from GIT tracking ?\n\n$opt" 7 60
+					response=$?
+					case $response in
+						0) git reset HEAD -- "$opt" ;;
+					
+						*) ;;
+					esac
+				fi
+				rm "$opt" ;;
+
 				*) ;;
 			esac
 			break
 		fi
+	fi
+}
+
+#-----------------------------------------------------------------------
+# gitAddFile()
+#-----------------------------------------------------------------------
+function gitAddFile {
+	if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+		dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+			--title "GIT adding file" \
+			--yesno "\nWould you like to add the following file to the GIT tracking ?\n\n$1" 11 60
+		response=$?
+		case $response in
+			0) git add $1 ;;
+			*) ;;
+		esac
 	fi
 }
 
@@ -358,6 +959,7 @@ function newFileOther {
 		return
 	else
 		touch "$new"
+		gitAddFile "$new"
 		$EDITOR "$new"
 	fi
 }
@@ -376,6 +978,9 @@ function newFileC {
 		mainFileX="${new}.c"
 		fullFileX="${project}/${mainFileX}"
 		cat > "$fullFileX" <<EOF
+/**********************************************************************/
+/* Copyright (C) $(date +%Y) ${userIDE} (${mailIDE}) */
+/**********************************************************************/
 #include <stdio.h>
 
 int main(int argc, char *argv[]) {
@@ -383,6 +988,7 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 EOF
+		gitAddFile "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -401,6 +1007,9 @@ function newFileCPP {
 		mainFileX="${new}.cpp"
 		fullFileX="${project}/${mainFileX}"
 		cat > "$fullFileX" <<EOF
+//**********************************************************************
+// Copyright (C) $(date +%Y) ${userIDE} (${mailIDE})
+//**********************************************************************
 #include <iostream>
 
 int main() {
@@ -408,6 +1017,7 @@ int main() {
 	return 0;
 }
 EOF
+		gitAddFile "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -427,11 +1037,15 @@ function newFileH {
 		fullFileX="${project}/${mainFileX}"
 		includeH=$(toUpper $mainFileX | tr '.' '_')
 		cat > "$fullFileX" <<EOF
+/**********************************************************************/
+/* Copyright (C) $(date +%Y) ${userIDE} (${mailIDE}) */
+/**********************************************************************/
 #ifndef $includeH
 #define $includeH
 
 #endif
 EOF
+		gitAddFile "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -451,6 +1065,9 @@ function newFileJAVA {
 		mainFileX="${new}.java"
 		fullFileX="${project}/${mainFileX}"
 		cat > "$fullFileX" <<EOF
+//**********************************************************************
+// Copyright (C) $(date +%Y) ${userIDE} (${mailIDE})
+//**********************************************************************
 public final class ${class}
 {
    /** Constructor. */
@@ -460,6 +1077,7 @@ public final class ${class}
    }
 }
 EOF
+		gitAddFile "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -478,13 +1096,29 @@ function newFilePY {
 		mainFileX="${new}.py"
 		fullFileX="${project}/${mainFileX}"
 		cat > "$fullFileX" <<EOF
-#include <iostream>
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#-------------------------------------------------------------------------------
+# Copyright (C) $(date +%Y) ${userIDE} (${mailIDE})
+#-------------------------------------------------------------------------------
 
-int main() {
-	std::cout << "Hello, World.\n";
-	return 0;
-}
+#-------------------------------------------------------------------------------
+# Imports
+#-------------------------------------------------------------------------------
+import sys
+
+#-------------------------------------------------------------------------------
+# main()
+#-------------------------------------------------------------------------------
+def main():
+	print("This is the name of the script : ", sys.argv[0])
+	print("Number of arguments            : ", len(sys.argv))
+	print("The arguments are              : ", str(sys.argv))
+
+if __name__ == "__main__":
+    main()
 EOF
+		gitAddFile "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -503,6 +1137,9 @@ function newFileGO {
 		mainFileX="${new}.go"
 		fullFileX="${project}/${mainFileX}"
 		cat > "$fullFileX" <<EOF
+//**********************************************************************
+// Copyright (C) $(date +%Y) ${userIDE} (${mailIDE})
+//**********************************************************************
 package main
 
 import "fmt"
@@ -511,6 +1148,7 @@ func main() {
     fmt.Println("Hello, World.")
 }
 EOF
+		gitAddFile "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -529,10 +1167,14 @@ function newFileRS {
 		mainFileX="${new}.rs"
 		fullFileX="${project}/${mainFileX}"
 		cat > "$fullFileX" <<EOF
+//**********************************************************************
+// Copyright (C) $(date +%Y) ${userIDE} (${mailIDE})
+//**********************************************************************
 fn main() {
     println!("Hello, World.");
 }
 EOF
+		gitAddFile "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -561,6 +1203,7 @@ function newFileHTML {
   </body>
 </html>
 EOF
+		gitAddFile "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -587,6 +1230,7 @@ function newFileXML {
   <body>Don't forget me this weekend!</body>
 </note>
 EOF
+		gitAddFile "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -634,6 +1278,7 @@ function newFileJSON {
   "spouse": null
 }
 EOF
+		gitAddFile "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -677,6 +1322,7 @@ Link to the first non-unique section: [Link Text](#this-heading-is-not-unique-in
 
 Link to the second non-unique section: [Link Text](#this-heading-is-not-unique-in-the-file-1).
 EOF
+		gitAddFile "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -705,6 +1351,7 @@ function newFileTXT {
 
 3. CONCLUSION
 EOF
+		gitAddFile "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -759,7 +1406,9 @@ function menuNewFile {
 function menuFiles {
 	itemsFiles=(	1 "Open file"
 			2 "New file"
-			3 "Delete file")
+			3 "Delete file"
+			4 "New folder"
+			5 "Delete folder")
 	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
 					 --title "Files" \
 					 --menu "" 12 40 10 "${itemsFiles[@]}" \
@@ -769,6 +1418,8 @@ function menuFiles {
 			1) openFile ;;
 			2) menuNewFile ;;
 			3) deleteFile ;;
+			4) newFolder ;;
+			5) deleteFolder ;;
 			*) ;; # some action on other
 		esac
 	done	
@@ -1568,63 +2219,93 @@ function menuBuildRun {
 # gitStatus()
 #-----------------------------------------------------------------------
 function gitStatus {
-	outFile=`mktemp`
-	echo "Current commit : " $(git rev-parse --short HEAD) &> $outFile
-	echo -e "\n" >> $outFile
-	git status &>> $outFile
-	echo -e "\n" >> $outFile
-	git diff &>> $outFile
-	dialog --backtitle "${ide} :: ${project} [${language}]" \
-			 --title "GIT Status" \
-			 --textbox "$outFile" 25 100 \
-			 2>&1 >/dev/tty
+	if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+		outFile=`mktemp`
+		echo "Current commit : " $(git rev-parse --short HEAD) &> $outFile
+		echo -e "\n" >> $outFile
+		git status &>> $outFile
+		echo -e "\n" >> $outFile
+		git diff &>> $outFile
+		dialog --backtitle "${ide} :: ${project} [${language}]" \
+				 --title "GIT Status" \
+				 --textbox "$outFile" 25 100 \
+				 2>&1 >/dev/tty
+	else
+		dialog --backtitle "${ide} :: ${project} [${language}]" \
+			--title "GIT Status" \
+			--msgbox "\nNo GIT repository found." 15 50
+	fi
 }
 
 #-----------------------------------------------------------------------
 # gitCommit()
 #-----------------------------------------------------------------------
 function gitCommit {
-	outFile=`mktemp`
-	msg=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+	if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+		outFile=`mktemp`
+		msg=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+					 --title "GIT Commit" \
+					 --inputbox "Please, enter the Commit message :" 12 40 \
+					 2>&1 >/dev/tty)
+		button=$?
+		if [ $button -eq 0 ]; then				 
+			git commit -a -m "${msg}" &> $outFile
+			dialog --backtitle "${ide} :: ${project} [${language}]" \
 				 --title "GIT Commit" \
-				 --inputbox "Please, enter the Commit message :" 12 40 \
-				 2>&1 >/dev/tty)
-	git commit -a -m "${msg}" &> $outFile
-	dialog --backtitle "${ide} :: ${project} [${language}]" \
-		 --title "GIT Commit" \
-		 --textbox "$outFile" 25 100 \
-		 2>&1 >/dev/tty
+				 --textbox "$outFile" 25 100 \
+				 2>&1 >/dev/tty
+		fi
+	else
+		dialog --backtitle "${ide} :: ${project} [${language}]" \
+			--title "GIT Commit" \
+			--msgbox "\nNo GIT repository found." 15 50
+	fi
 }
 
 #-----------------------------------------------------------------------
 # gitPush()
 #-----------------------------------------------------------------------
 function gitPush {
-	outFile=`mktemp`
-	branch="$(git rev-parse --abbrev-ref HEAD)"
-	git push origin ${branch} &> $outFile
-	dialog --backtitle "${ide} :: ${project} [${language}]" \
-		 --title "GIT Push" \
-		 --textbox "$outFile" 25 100 \
-		 2>&1 >/dev/tty
+	if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+		outFile=`mktemp`
+		branch="$(git rev-parse --abbrev-ref HEAD)"
+		git push origin ${branch} &> $outFile
+		dialog --backtitle "${ide} :: ${project} [${language}]" \
+			 --title "GIT Push" \
+			 --textbox "$outFile" 25 100 \
+			 2>&1 >/dev/tty
+	else
+		dialog --backtitle "${ide} :: ${project} [${language}]" \
+			--title "GIT Push" \
+			--msgbox "\nNo GIT repository found." 15 50
+	fi
 }
 
 #-----------------------------------------------------------------------
 # gitCommitPush()
 #-----------------------------------------------------------------------
 function gitCommitPush {
-	outFile=`mktemp`
-	msg=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+	if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+		outFile=`mktemp`
+		msg=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+					 --title "GIT Commit & Push" \
+					 --inputbox "\nPlease, enter the Commit message :" 12 40 \
+					 2>&1 >/dev/tty)
+		button=$?
+		if [ $button -eq 0 ]; then
+			git commit -a -m "${msg}" &> $outFile
+			branch="$(git rev-parse --abbrev-ref HEAD)"
+			git push origin ${branch} &>> $outFile
+			dialog --backtitle "${ide} :: ${project} [${language}]" \
 				 --title "GIT Commit & Push" \
-				 --inputbox "\nPlease, enter the Commit message :" 12 40 \
-				 2>&1 >/dev/tty)
-	git commit -a -m "${msg}" &> $outFile
-	branch="$(git rev-parse --abbrev-ref HEAD)"
-	git push origin ${branch} &>> $outFile
-	dialog --backtitle "${ide} :: ${project} [${language}]" \
-		 --title "GIT Commit & Push" \
-		 --textbox "$outFile" 25 100 \
-		 2>&1 >/dev/tty
+				 --textbox "$outFile" 25 100 \
+				 2>&1 >/dev/tty
+		fi
+	else
+		dialog --backtitle "${ide} :: ${project} [${language}]" \
+			--title "GIT Commit & Push" \
+			--msgbox "\nNo GIT repository found." 15 50
+	fi
 }
 
 #-----------------------------------------------------------------------
@@ -1774,7 +2455,8 @@ function menuProject {
 	itemsProject=(1 "Open project"
 				  2 "New project"
 				  3 "Info"
-				  4 "Archive project")
+				  4 "Archive project"
+				  5 "Configure ${ide}")
 	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
 					 --title "Project" \
 					 --menu "" 12 40 10 "${itemsProject[@]}" \
@@ -1785,6 +2467,7 @@ function menuProject {
 			2) newProject ;;
 			3) infoProject ;;
 			4) archiveProject ;;
+			5) configureIDE ;;
 			*) ;; # some action on other
 		esac
 	done	
@@ -1794,14 +2477,18 @@ function menuProject {
 # menuExit()
 #-----------------------------------------------------------------------
 function menuExit {
-	dialog 	--backtitle "${ide} :: ${project} [${language}]" \
-		--title "Exiting" \
-		--yesno "Are you sure you want to exit ?" 7 60
-	response=$?
-	case $response in
-		0) doloop=0 ;;
-		*) ;;
-	esac
+	if [ ${confirmExitIDE} = true ]; then
+		dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+			--title "Exiting" \
+			--yesno "Are you sure you want to exit ?" 7 60
+		response=$?
+		case $response in
+			0) doloop=0 ;;
+			*) ;;
+		esac
+	else
+		doloop=0
+	fi
 }
 
 #-----------------------------------------------------------------------
@@ -1821,6 +2508,7 @@ guessLanguage
 if [[ ! -e "$configDir" ]] then
 	mkdir $configDir
 fi
+readConfig
 doloop=1
 while [ $doloop -eq 1 ]
 do
@@ -1842,5 +2530,6 @@ do
 		fi
 	done
 done
+saveConfig
 clear # Exiting
 echo "${ide} :: Exiting at $(date '+%d/%m/%Y %H:%M:%S')."
