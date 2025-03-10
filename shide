@@ -940,8 +940,9 @@ function deleteFile {
 				--yesno "Are you sure you want to delete the following file ?\n\n$opt" 7 60
 			response=$?
 			case $response in
-				0) 
-				if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+				0) git ls-files --error-unmatch "$opt" > /dev/null 2>&1
+				rc=$?
+				if [ $rc -eq 0 ]; then
 					dialog --backtitle "${ide} :: ${project} [${language}]" \
 						--title "Deleting file from GIT" \
 						--yesno "Do you wish to remove this file from GIT tracking ?\n\n$opt" 7 60
