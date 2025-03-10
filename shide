@@ -22,105 +22,135 @@ function toLower {
 # licenseApache()
 #-----------------------------------------------------------------------
 function licenseApache {
-	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/apache-v2.0.md"
+	fileLicense="apache-v2.0.md"
+	wget -q "${urlLicenses}${fileLicense}"
+	gitAddFile "${fileLicense}"
 }
 
 #-----------------------------------------------------------------------
 # licenseArtistic()
 #-----------------------------------------------------------------------
 function licenseArtistic {
-	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/artistic-v2.0.md"
+	fileLicense="artistic-v2.0.md"
+	wget -q "${urlLicenses}${fileLicense}"
+	gitAddFile "${fileLicense}"
 }
 
 #-----------------------------------------------------------------------
 # licenseBSDv2()
 #-----------------------------------------------------------------------
 function licenseBSDv2 {
-	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/bsd-2.md"
+	fileLicense="bsd-2.md"
+	wget -q "${urlLicenses}${fileLicense}"
+	gitAddFile "${fileLicense}"
 }
 
 #-----------------------------------------------------------------------
 # licenseBSDv3()
 #-----------------------------------------------------------------------
 function licenseBSDv3 {
-	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/bsd-3.md"
+	fileLicense="bsd-3.md"
+	wget -q "${urlLicenses}${fileLicense}"
+	gitAddFile "${fileLicense}"
 }
 
 #-----------------------------------------------------------------------
 # licenseEPL()
 #-----------------------------------------------------------------------
 function licenseEPL {
-	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/epl-v1.0.md"
+	fileLicense="epl-v1.0.md"
+	wget -q "${urlLicenses}${fileLicense}"
+	gitAddFile "${fileLicense}"
 }
 
 #-----------------------------------------------------------------------
 # licenseGNUAGPL()
 #-----------------------------------------------------------------------
 function licenseGNUAGPL {
-	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/gnu-agpl-v3.0.md"
+	fileLicense="gnu-agpl-v3.0.md"
+	wget -q "${urlLicenses}${fileLicense}"
+	gitAddFile "${fileLicense}"
 }
 
 #-----------------------------------------------------------------------
 # licenseGNUFDL()
 #-----------------------------------------------------------------------
 function licenseGNUFDL {
-	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/gnu-fdl-v1.3.md"
+	fileLicense="gnu-fdl-v1.3.md"
+	wget -q "${urlLicenses}${fileLicense}"
+	gitAddFile "${fileLicense}"
 }
 
 #-----------------------------------------------------------------------
 # licenseGNUGPLv1()
 #-----------------------------------------------------------------------
 function licenseGNUGPLv1 {
-	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/gnu-gpl-v1.0.md"
+	fileLicense="gnu-gpl-v1.0.md"
+	wget -q "${urlLicenses}${fileLicense}"
+	gitAddFile "${fileLicense}"
 }
 
 #-----------------------------------------------------------------------
 # licenseGNUCPLv2()
 #-----------------------------------------------------------------------
 function licenseGNUCPLv2 {
-	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/gnu-gpl-v2.0.md"
+	fileLicense="gnu-gpl-v2.0.md"
+	wget -q "${urlLicenses}${fileLicense}"
+	gitAddFile "${fileLicense}"
 }
 
 #-----------------------------------------------------------------------
 # licenseGNUGPLv3()
 #-----------------------------------------------------------------------
 function licenseGNUGPLv3 {
-	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/gnu-gpl-v3.0.md"
+	fileLicense="gnu-gpl-v3.0.md"
+	wget -q "${urlLicenses}${fileLicense}"
+	gitAddFile "${fileLicense}"
 }
 
 #-----------------------------------------------------------------------
 # licenseGNULGPLv2()
 #-----------------------------------------------------------------------
 function licenseGNULGPLv2 {
-	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/gnu-lgpl-v2.1.md"
+	fileLicense="gnu-lgpl-v2.1.md"
+	wget -q "${urlLicenses}${fileLicense}"
+	gitAddFile "${fileLicense}"
 }
 
 #-----------------------------------------------------------------------
 # licenseGNULGPLv3()
 #-----------------------------------------------------------------------
 function licenseGNULGPLv3 {
-	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/gnu-lgpl-v3.0.md"
+	fileLicense="gnu-lgpl-v3.0.md"
+	wget -q "${urlLicenses}${fileLicense}"
+	gitAddFile "${fileLicense}"
 }
 
 #-----------------------------------------------------------------------
 # licenseMIT()
 #-----------------------------------------------------------------------
 function licenseMIT {
-	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/mit.md"
+	fileLicense="mit.md"
+	wget -q "${urlLicenses}${fileLicense}"
+	gitAddFile "${fileLicense}"
 }
 
 #-----------------------------------------------------------------------
 # licenseMPL()
 #-----------------------------------------------------------------------
 function licenseMPL {
-	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/mpl-v2.0.md"
+	fileLicense="mpl-v2.0.md"
+	wget -q "${urlLicenses}${fileLicense}"
+	gitAddFile "${fileLicense}"
 }
 
 #-----------------------------------------------------------------------
 # licenseUnlicense()
 #-----------------------------------------------------------------------
 function licenseUnlicense {
-	wget -q "https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/unlicense.md"
+	fileLicense="unlicense.md"
+	wget -q "${urlLicenses}${fileLicense}"
+	gitAddFile "${fileLicense}"
 }
 
 #-----------------------------------------------------------------------
@@ -699,23 +729,23 @@ function configureIDE {
 # chooseLicense()
 #-----------------------------------------------------------------------
 function chooseLicense {
-		itemsLicenses=( 	1 "Apache"
-					2 "Artistic"
-					3 "BSD v2.0 (Simplified BSD License)"
-					4 "BSD v3.0 (Modified BSD License)"
-					5 "Eclipse Public License"
-					6 "GNU Affero General Public License"
-					7 "GNU Free Documentation License"
-					8 "GNU General Public License v1.0"
-					9 "GNU General Public License v2.0"
-					10 "GNU General Public License v3.0"
-					11 "GNU Lesser General Public License v2.1"
-					12 "GNU Lesser General Public License v3.0"
-					13 "MIT"
-					14 "Mozilla Public License v2.0"
-					15 "Unlicense (Public Domain)")
+	urlLicenses="https://raw.githubusercontent.com/IQAndreas/markdown-licenses/refs/heads/master/"
+	itemsLicenses=( 	1 "Apache"
+				2 "Artistic"
+				3 "BSD v2.0 (Simplified BSD License)"
+				4 "BSD v3.0 (Modified BSD License)"
+				5 "Eclipse Public License"
+				6 "GNU Affero General Public License"
+				7 "GNU Free Documentation License"
+				8 "GNU General Public License v1.0"
+				9 "GNU General Public License v2.0"
+				10 "GNU General Public License v3.0"
+				11 "GNU Lesser General Public License v2.1"
+				12 "GNU Lesser General Public License v3.0"
+				13 "MIT"
+				14 "Mozilla Public License v2.0"
+				15 "Unlicense (Public Domain)")
 					
-
 	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
 				--title "License" \
 				--menu "" 25 50 10 "${itemsLicenses[@]}" \
@@ -2430,7 +2460,7 @@ function menuGIT {
 				  7 "Initialize (GIT Bang)"
 				  8 "Configure")
 	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
-					 --title "GIT" \
+					 --title "GIT Tracking" \
 					 --menu "" 15 40 10 "${itemsGIT[@]}" \
 					 2>&1 >/dev/tty)	
 		do
@@ -2497,7 +2527,7 @@ function menuExit {
 items=(1 "Project"
        2 "Files"
        3 "Build and Run"
-       4 "GIT"
+       4 "GIT Tracking"
        5 "Exit")
 
 ide=$(basename $0)
