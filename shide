@@ -1416,6 +1416,29 @@ function newFolder {
 }
 
 #-----------------------------------------------------------------------
+# deleteFolder()
+#-----------------------------------------------------------------------
+function deleteFolder {
+	folder=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			     --title "Delete folder" \
+				 --dselect ${project} 15 80 \
+				 2>&1 >/dev/tty)
+	if [ -z "$folder" ]; then
+		return
+	else
+		dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+			--title "Delete folder" \
+			--yesno "\nAre you sure you want to delete the following folder ?\n\n${folder}" 11 60
+		response=$?
+		case $response in
+			0) ;;
+
+			*) ;;
+		esac
+	fi
+}
+
+#-----------------------------------------------------------------------
 # menuNewFile()
 #-----------------------------------------------------------------------
 function menuNewFile {
