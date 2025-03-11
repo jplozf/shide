@@ -1388,6 +1388,31 @@ EOF
 }
 
 #-----------------------------------------------------------------------
+# newFolder()
+#-----------------------------------------------------------------------
+function newFolder {
+	new=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+			     --title "New folder" \
+				 --inputbox "Please, enter the new folder name :" 12 40 \
+				 2>&1 >/dev/tty)
+	if [[ -z "$new" ]] then
+		return
+	else
+		mkdir "$new"
+		if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+			dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+				--title "GIT adding file" \
+				--yesno "\nWould you like to add the following folder to the GIT tracking ?\n\n${new}" 11 60
+			response=$?
+			case $response in
+				0) git add ${new} ;;
+				*) ;;
+			esac
+		fi
+	fi
+}
+
+#-----------------------------------------------------------------------
 # menuNewFile()
 #-----------------------------------------------------------------------
 function menuNewFile {
