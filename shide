@@ -1405,7 +1405,10 @@ function newFolder {
 				--yesno "\nWould you like to add the following folder to the GIT tracking ?\n\n${new}" 11 60
 			response=$?
 			case $response in
-				0) git add ${new} ;;
+				0) cd "$new" 
+				touch .keepme
+				git add . ;;
+
 				*) ;;
 			esac
 		fi
