@@ -1424,10 +1424,10 @@ function isFolderGITTracked {
 	cd "$1"
 	if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
 		cd "${cDir}"
-		echo true
+		true
 	else
 		cd "${cDir}"
-		echo false
+		false
 	fi
 }
 	
@@ -1450,7 +1450,7 @@ function deleteFolder {
 					--yesno "\nAre you sure you want to delete the following folder ?\n\n${folder}" 11 60
 				response=$?
 				case $response in
-					0) if [ isFolderGITTracked "${folder}" = "true" ]; then 
+					0) if isFolderGITTracked "${folder}"; then 
 						dialog --backtitle "${ide} :: ${project} [${language}]" \
 							--title "Deleting folder from GIT" \
 							--yesno "Do you wish to remove this folder from GIT tracking ?\n\n${folder}" 7 60
@@ -1474,7 +1474,7 @@ function deleteFolder {
 					--yesno "\nThe following folder is not empty.\nAre you sure you want to delete it ?\n\n${folder}" 11 60
 				response=$?
 				case $response in
-					0) if [ isFolderGITTracked "${folder}" = "true" ]; then 
+					0) if isFolderGITTracked "${folder}"; then 
 						dialog --backtitle "${ide} :: ${project} [${language}]" \
 							--title "Deleting folder from GIT" \
 							--yesno "Do you wish to remove this folder from GIT tracking ?\n\n${folder}" 7 60
