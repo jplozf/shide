@@ -691,7 +691,7 @@ function configureMailAddress {
 function configureConfirmExit {
 	dialog 	--backtitle "${ide} :: ${project} [${language}]" \
 		--title "Confirm exit" \
-		--yesno "\nWould you like to confirm on exit ?\n\nCurrently, the value is ${confirmExitIDE}" 11 60
+		--yesno "\nWould you like to confirm on exit ?\n\nCurrently, the value is set to ${confirmExitIDE}." 11 60
 	response=$?
 	case $response in
 		0) confirmExitIDE=true ;;
@@ -1416,6 +1416,20 @@ function newFolder {
 }
 
 #-----------------------------------------------------------------------
+# isFolderGITTracked()
+#-----------------------------------------------------------------------
+function isFolderGITTracked {
+	cDir=$PWD
+	cd "$1"
+	if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+		echo true
+	else
+		echo false
+	fi
+	cd "cDir"
+}
+	
+#-----------------------------------------------------------------------
 # deleteFolder()
 #-----------------------------------------------------------------------
 function deleteFolder {
@@ -1423,19 +1437,62 @@ function deleteFolder {
 			     --title "Delete folder" \
 				 --dselect ${project} 15 80 \
 				 2>&1 >/dev/tty)
-	if [ -z "$folder" ]; then
-		return
-	else
-		dialog 	--backtitle "${ide} :: ${project} [${language}]" \
-			--title "Delete folder" \
-			--yesno "\nAre you sure you want to delete the following folder ?\n\n${folder}" 11 60
-		response=$?
-		case $response in
-			0) ;;
+	response=$?
+	case $response in
+		0) if [ -z "${folder}" ]; then
+			return
+		else
+			if [ $( ls -A "${folder}" | wc -l ) -eq 0 ]; then
+				dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+					--title "Delete folder" \
+					--yesno "\nAre you sure you want to delete the following folder ?\n\n${folder}" 11 60
+				response=$?
+				case $response in
+					0) if [ isFolderGITTracked "${folder}" = true ]; then 
+						dialog --backtitle "${ide} :: ${project} [${language}]" \
+							--title "Deleting folder from GIT" \
+							--yesno "Do you wish to remove this folder from GIT tracking ?\n\n${folder}" 7 60
+						response=$?
+						case $response in
+							0) git reset HEAD -- "${folder}" ;;
+					
+							*) ;;
+						esac
+					fi
+					rm -rf "${folder}"
+					;;
 
-			*) ;;
-		esac
-	fi
+					*) ;;
+				esac
+				
+			else
+				dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+					--title "Delete folder" \
+					--yesno "\nThe following folder is not empty.\nAre you sure you want to delete it ?\n\n${folder}" 11 60
+				response=$?
+				case $response in
+					0) if [ isFolderGITTracked "${folder}" = true ]; then 
+						dialog --backtitle "${ide} :: ${project} [${language}]" \
+							--title "Deleting folder from GIT" \
+							--yesno "Do you wish to remove this folder from GIT tracking ?\n\n${folder}" 7 60
+						response=$?
+						case $response in
+							0) git reset HEAD -- "${folder}" ;;
+					
+							*) ;;
+						esac
+					fi
+					rm -rf "${folder}"
+					;;
+
+					*) ;;
+				esac
+			fi
+		fi
+		;;
+		
+		*) ;;
+	esac
 }
 
 #-----------------------------------------------------------------------
@@ -1910,6 +1967,7 @@ function newProject {
 # infoProject()
 #-----------------------------------------------------------------------
 function infoProject {
+	cd "${project}"
 	outFile=`mktemp`
 	rawProject=`basename "${project}"`
 	tree -Dh > $outFile
