@@ -1637,10 +1637,19 @@ function projectPYTHON {
 	fullFileX="${project}/${mainFileX}"
 	cat > "$fullFileX" <<EOF
 #!/usr/bin/env python
-# -*- coding: utf-8 *-*
+# -*- coding: utf-8 -*-
+#-------------------------------------------------------------------------------
+# Copyright (C) $(date +%Y) ${userIDE} (${mailIDE})
+#-------------------------------------------------------------------------------
 
+#-------------------------------------------------------------------------------
+# Imports
+#-------------------------------------------------------------------------------
 import sys
 
+#-------------------------------------------------------------------------------
+# main()
+#-------------------------------------------------------------------------------
 def main():
 	print("This is the name of the script : ", sys.argv[0])
 	print("Number of arguments            : ", len(sys.argv))
@@ -1672,6 +1681,9 @@ function projectJAVA {
 	mainFileX=`basename "${project}".java`
 	fullFileX="${project}/${mainFileX}"
 	cat > "$fullFileX" <<EOF
+//**********************************************************************
+// Copyright (C) $(date +%Y) ${userIDE} (${mailIDE})
+//**********************************************************************	
 public final class ${class}
 {
    /** Constructor. */
@@ -1714,6 +1726,9 @@ function projectCRaw {
 	fullFileH="${project}/${mainFileH}"
 	includeH=$(toUpper $mainFileH | tr '.' '_')
 	cat > "$fullFileH" <<EOF
+/**********************************************************************/
+/* Copyright (C) $(date +%Y) ${userIDE} (${mailIDE}) */
+/**********************************************************************/
 #ifndef $includeH
 #define $includeH
 
@@ -1722,6 +1737,9 @@ EOF
 	mainFileC=`basename "${project}".c`
 	fullFileC="${project}/${mainFileC}"
 	cat > "$fullFileC" <<EOF
+/**********************************************************************/
+/* Copyright (C) $(date +%Y) ${userIDE} (${mailIDE}) */
+/**********************************************************************/
 #include "$mainFileH"
 #include <stdio.h>
 
@@ -1759,6 +1777,9 @@ function projectCPPRaw {
 	fullFileH="${project}/${mainFileH}"
 	includeH=$(toUpper $mainFileH | tr '.' '_')
 	cat > "$fullFileH" <<EOF
+/**********************************************************************/
+/* Copyright (C) $(date +%Y) ${userIDE} (${mailIDE}) */
+/**********************************************************************/	
 #ifndef $includeH
 #define $includeH
 
@@ -1767,6 +1788,9 @@ EOF
 	mainFileCPP=`basename "${project}".cpp`
 	fullFileCPP="${project}/${mainFileCPP}"
 	cat > "$fullFileCPP" <<EOF
+//**********************************************************************
+// Copyright (C) $(date +%Y) ${userIDE} (${mailIDE})
+//**********************************************************************
 #include "$mainFileH"
 #include <iostream>
 
@@ -1804,6 +1828,9 @@ function projectCNCurses {
 	fullFileH="${project}/${mainFileH}"
 	includeH=$(toUpper $mainFileH | tr '.' '_')
 	cat > "$fullFileH" <<EOF
+/**********************************************************************/
+/* Copyright (C) $(date +%Y) ${userIDE} (${mailIDE}) */
+/**********************************************************************/
 #ifndef $includeH
 #define $includeH
 
@@ -1812,6 +1839,9 @@ EOF
 	mainFileC=`basename "${project}".c`
 	fullFileC="${project}/${mainFileC}"
 	cat > "$fullFileC" <<EOF
+/**********************************************************************/
+/* Copyright (C) $(date +%Y) ${userIDE} (${mailIDE}) */
+/**********************************************************************/
 #include "$mainFileH"
 #include <ncurses/ncurses.h>
  
@@ -1877,6 +1907,9 @@ function projectGO {
 	mainFileGO=`basename "${project}".go`
 	fullFileGO="${project}/${mainFileGO}"
 	cat > "$fullFileGO" <<EOF
+//**********************************************************************
+// Copyright (C) $(date +%Y) ${userIDE} (${mailIDE})
+//**********************************************************************	
 package main
 
 import "fmt"
