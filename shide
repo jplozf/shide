@@ -1395,10 +1395,10 @@ function newFolder {
 			     --title "New folder" \
 				 --inputbox "Please, enter the new folder name :" 12 40 \
 				 2>&1 >/dev/tty)
-	if [[ -z "$new" ]] then
+	if [[ -z "${new}" ]] then
 		return
 	else
-		mkdir "$new"
+		mkdir "${new}"
 		if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
 			dialog 	--backtitle "${ide} :: ${project} [${language}]" \
 				--title "GIT adding file" \
@@ -1412,6 +1412,7 @@ function newFolder {
 				*) ;;
 			esac
 		fi
+		cd "${project}"
 	fi
 }
 
@@ -1422,11 +1423,12 @@ function isFolderGITTracked {
 	cDir=$PWD
 	cd "$1"
 	if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+		cd "${cDir}"
 		echo true
 	else
+		cd "${cDir}"
 		echo false
 	fi
-	cd "cDir"
 }
 	
 #-----------------------------------------------------------------------
@@ -1448,7 +1450,7 @@ function deleteFolder {
 					--yesno "\nAre you sure you want to delete the following folder ?\n\n${folder}" 11 60
 				response=$?
 				case $response in
-					0) if [ isFolderGITTracked "${folder}" = true ]; then 
+					0) if [ isFolderGITTracked "${folder}" = "true" ]; then 
 						dialog --backtitle "${ide} :: ${project} [${language}]" \
 							--title "Deleting folder from GIT" \
 							--yesno "Do you wish to remove this folder from GIT tracking ?\n\n${folder}" 7 60
@@ -1459,6 +1461,7 @@ function deleteFolder {
 							*) ;;
 						esac
 					fi
+					cd "${project}"
 					rm -rf "${folder}"
 					;;
 
@@ -1471,7 +1474,7 @@ function deleteFolder {
 					--yesno "\nThe following folder is not empty.\nAre you sure you want to delete it ?\n\n${folder}" 11 60
 				response=$?
 				case $response in
-					0) if [ isFolderGITTracked "${folder}" = true ]; then 
+					0) if [ isFolderGITTracked "${folder}" = "true" ]; then 
 						dialog --backtitle "${ide} :: ${project} [${language}]" \
 							--title "Deleting folder from GIT" \
 							--yesno "Do you wish to remove this folder from GIT tracking ?\n\n${folder}" 7 60
@@ -1482,6 +1485,7 @@ function deleteFolder {
 							*) ;;
 						esac
 					fi
+					cd "${project}"
 					rm -rf "${folder}"
 					;;
 
@@ -2672,4 +2676,4 @@ do
 done
 saveConfig
 clear # Exiting
-echo "${ide} :: Exiting at $(date '+%d/%m/%Y %H:%M:%S')."
+echo "⚗  ${ide} :: Exiting at $(date '+%d/%m/%Y %H:%M:%S')."
