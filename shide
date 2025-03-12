@@ -2576,6 +2576,61 @@ function gitBang {
 }
 
 #-----------------------------------------------------------------------
+# gitFetch()
+#-----------------------------------------------------------------------
+function gitFetch {
+	if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+		dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+			--title "GIT Fetch" \
+			--yesno "\nThe GIT Fetch will fetch the remote version but no merging is processed locally.\n\nAre you sure you want to proceed ?" 11 60
+		response=$?
+		case $response in
+			0) outFile=`mktemp`
+			git fetch origin &> $outFile
+			dialog --backtitle "${ide} :: ${project} [${language}]" \
+				 --title "GIT Fetch" \
+				 --textbox "$outFile" 25 100 \
+				 2>&1 >/dev/tty
+			;;
+				
+			*) ;;
+		esac
+	else
+		dialog --backtitle "${ide} :: ${project} [${language}]" \
+			--title "GIT Fetch" \
+			--msgbox "\nNo GIT repository found." 15 50
+	fi
+}
+
+#-----------------------------------------------------------------------
+# gitPull()
+#-----------------------------------------------------------------------
+function gitPull {
+	if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+		branch="$(git rev-parse --abbrev-ref HEAD)"
+		dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+			--title "GIT Pull" \
+			--yesno "\nThe GIT Pull will fetch the remote version and merge it with you local branch which is currently [${branch}].\n\nAre you sure you want to proceed ?" 11 60
+		response=$?
+		case $response in
+			0) outFile=`mktemp`
+			git pull origin ${branch} &> $outFile
+			dialog --backtitle "${ide} :: ${project} [${language}]" \
+				 --title "GIT Pull" \
+				 --textbox "$outFile" 25 100 \
+				 2>&1 >/dev/tty
+			;;
+				
+			*) ;;
+		esac
+	else
+		dialog --backtitle "${ide} :: ${project} [${language}]" \
+			--title "GIT Pull" \
+			--msgbox "\nNo GIT repository found." 15 50
+	fi
+}
+
+#-----------------------------------------------------------------------
 # gitConfigure()
 #-----------------------------------------------------------------------
 function gitConfigure {
