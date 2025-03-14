@@ -1043,6 +1043,39 @@ EOF
 }	
 
 #-----------------------------------------------------------------------
+# updateMRUFiles()
+#-----------------------------------------------------------------------
+function updateMRUFiles {
+	mruFile="$configDir/MRUFiles"
+	grep -v "$1" ${mruFile} > tmpFile && mv tmpFile ${mruFile}
+	echo -e "$1#\n$(cat ${mruFile})" > ${mruFile}
+	sed -i "/^$/d" ${mruFile}	# delete empty lines
+	sed -i "11,$ d" ${mruFile}	# truncate to 10 lines
+}
+
+#-----------------------------------------------------------------------
+# recentFiles()
+#-----------------------------------------------------------------------
+function recentFiles {
+	let i=0 # define counting variable
+	W=() # define working array
+	while read -r line; do # process file by file
+		let i=$i+1
+		W+=($i "${line:0:-1}")
+	done < "$configDir/MRUFiles"
+	file=$(dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+			--title "Recent files" \
+			--menu "" 24 80 17 "${W[@]}" \
+			2>&1 >/dev/tty)
+	RESULT=$?
+	clear
+	if [ $RESULT -eq 0 ]; then 	# Exit with OK
+		opt=${W[$((file * 2 -1))]}
+		$EDITOR "$opt"
+	fi
+}
+
+#-----------------------------------------------------------------------
 # openFile()
 #-----------------------------------------------------------------------
 function openFile {
@@ -1064,6 +1097,7 @@ function openFile {
 			cd "$opt"
 			openFile
 		else			# or a file ?
+			updateMRUFiles "$PWD/$opt"
 			$EDITOR "$opt"
 			break
 		fi
@@ -1148,6 +1182,7 @@ function newFileOther {
 	else
 		touch "$new"
 		gitAddFile "$new"
+		updateMRUFiles "$project/$new"
 		$EDITOR "$new"
 	fi
 }
@@ -1177,6 +1212,7 @@ int main(int argc, char *argv[]) {
 }
 EOF
 		gitAddFile "$fullFileX"
+		updateMRUFiles "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -1206,6 +1242,7 @@ int main() {
 }
 EOF
 		gitAddFile "$fullFileX"
+		updateMRUFiles "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -1234,6 +1271,7 @@ function newFileH {
 #endif
 EOF
 		gitAddFile "$fullFileX"
+		updateMRUFiles "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -1266,6 +1304,7 @@ public final class ${class}
 }
 EOF
 		gitAddFile "$fullFileX"
+		updateMRUFiles "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -1307,6 +1346,7 @@ if __name__ == "__main__":
     main()
 EOF
 		gitAddFile "$fullFileX"
+		updateMRUFiles "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -1337,6 +1377,7 @@ func main() {
 }
 EOF
 		gitAddFile "$fullFileX"
+		updateMRUFiles "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -1363,6 +1404,7 @@ fn main() {
 }
 EOF
 		gitAddFile "$fullFileX"
+		updateMRUFiles "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -1392,6 +1434,7 @@ function newFileHTML {
 </html>
 EOF
 		gitAddFile "$fullFileX"
+		updateMRUFiles "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -1419,6 +1462,7 @@ function newFileXML {
 </note>
 EOF
 		gitAddFile "$fullFileX"
+		updateMRUFiles "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -1467,6 +1511,7 @@ function newFileJSON {
 }
 EOF
 		gitAddFile "$fullFileX"
+		updateMRUFiles "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -1511,6 +1556,7 @@ Link to the first non-unique section: [Link Text](#this-heading-is-not-unique-in
 Link to the second non-unique section: [Link Text](#this-heading-is-not-unique-in-the-file-1).
 EOF
 		gitAddFile "$fullFileX"
+		updateMRUFiles "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -1540,6 +1586,7 @@ function newFileTXT {
 3. CONCLUSION
 EOF
 		gitAddFile "$fullFileX"
+		updateMRUFiles "$fullFileX"
 		$EDITOR "$fullFileX"
 	fi
 }
@@ -1704,32 +1751,84 @@ function menuNewFile {
 # menuFiles()
 #-----------------------------------------------------------------------
 function menuFiles {
-	itemsFiles=(	1 "Open file"
-			2 "New file"
-			3 "Delete file"
-			4 "New folder"
-			5 "Delete folder")
-	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+	if [ $(wc -l <"${configDir}/MRUFiles") -ge 2 ]; then
+		itemsFiles=(	1 "Recent files"
+				2 "Open file"
+				3 "New file"
+				4 "Delete file"
+				5 "New folder"
+				6 "Delete folder")
+		while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
 					 --title "Files" \
 					 --menu "" 12 40 10 "${itemsFiles[@]}" \
 					 2>&1 >/dev/tty)	
 		do
-		case $choice in
-			1) openFile ;;
-			2) menuNewFile ;;
-			3) deleteFile ;;
-			4) newFolder ;;
-			5) deleteFolder ;;
-			*) ;; # some action on other
-		esac
-	done	
+			case $choice in
+				1) recentFiles ;;
+				2) openFile ;;
+				3) menuNewFile ;;
+				4) deleteFile ;;
+				5) newFolder ;;
+				6) deleteFolder ;;
+				*) ;; # some action on other
+			esac
+		done	
+	else
+		itemsFiles=(	1 "Open file"
+				2 "New file"
+				3 "Delete file"
+				4 "New folder"
+				5 "Delete folder")
+		while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+					 --title "Files" \
+					 --menu "" 12 40 10 "${itemsFiles[@]}" \
+					 2>&1 >/dev/tty)	
+		do
+			case $choice in
+				1) openFile ;;
+				2) menuNewFile ;;
+				3) deleteFile ;;
+				4) newFolder ;;
+				5) deleteFolder ;;
+				*) ;; # some action on other
+			esac
+		done	
+	fi
 }
 
 #-----------------------------------------------------------------------
 # updateMRUProjects()
 #-----------------------------------------------------------------------
 function updateMRUProjects {
-	echo
+	mruFile="$configDir/MRUProjects"
+	grep -v "${project}" ${mruFile} > tmpFile && mv tmpFile ${mruFile}
+	echo -e "${project}#\n$(cat ${mruFile})" > ${mruFile}
+	sed -i "/^$/d" ${mruFile}	# delete empty lines
+	sed -i "11,$ d" ${mruFile}	# truncate to 10 lines
+}
+
+#-----------------------------------------------------------------------
+# recentProjects()
+#-----------------------------------------------------------------------
+function recentProjects {
+	let i=0 # define counting variable
+	W=() # define working array
+	while read -r line; do # proc[1;5Aess file by file
+		let i=$i+1
+		W+=($i "${line:0:-1}")
+	done < "$configDir/MRUProjects"
+	file=$(dialog 	--backtitle "${ide} :: ${project} [${language}]" \
+			--title "Recent projects" \
+			--menu "" 24 80 17 "${W[@]}" \
+			2>&1 >/dev/tty)
+	RESULT=$?
+	clear
+	if [ $RESULT -eq 0 ]; then 	# Exit with OK
+		opt=${W[$((file * 2 -1))]}
+		cd "$opt"
+		project=$PWD
+		guessLanguage
+	fi
 }
 
 #-----------------------------------------------------------------------
@@ -2841,25 +2940,49 @@ function menuGIT {
 # menuProject()
 #-----------------------------------------------------------------------
 function menuProject {
-	itemsProject=(1 "Open project"
-				  2 "New project"
-				  3 "Info"
-				  4 "Archive project"
-				  5 "Configure ${ide}")
-	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+	if [ $(wc -l <"${configDir}/MRUProjects") -ge 2 ]; then
+		itemsProject=(	1 "Recent projects"
+				2 "Open project"
+				3 "New project"
+				4 "Info"
+				5 "Archive project"
+				6 "Configure ${ide}")
+		while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
 					 --title "Project" \
 					 --menu "" 12 40 10 "${itemsProject[@]}" \
 					 2>&1 >/dev/tty)	
 		do
-		case $choice in
-			1) openProject ;;
-			2) newProject ;;
-			3) infoProject ;;
-			4) archiveProject ;;
-			5) configureIDE ;;
-			*) ;; # some action on other
-		esac
-	done	
+			case $choice in
+				1) recentProjects ;;
+				2) openProject ;;
+				3) newProject ;;
+				4) infoProject ;;
+				5) archiveProject ;;
+				6) configureIDE ;;
+				*) ;; # some action on other
+			esac
+		done
+	else
+		itemsProject=(	1 "Open project"
+				2 "New project"
+				3 "Info"
+				4 "Archive project"
+				5 "Configure ${ide}")
+		while choice=$(dialog --backtitle "${ide} :: ${project} [${language}]" \
+					 --title "Project" \
+					 --menu "" 12 40 10 "${itemsProject[@]}" \
+					 2>&1 >/dev/tty)	
+		do
+			case $choice in
+				1) openProject ;;
+				2) newProject ;;
+				3) infoProject ;;
+				4) archiveProject ;;
+				5) configureIDE ;;
+				*) ;; # some action on other
+			esac
+		done
+	fi	
 }
 
 #-----------------------------------------------------------------------
@@ -2898,6 +3021,7 @@ if [[ ! -e "$configDir" ]] then
 	mkdir $configDir
 fi
 readConfig
+updateMRUProjects
 doloop=1
 while [ $doloop -eq 1 ]
 do
