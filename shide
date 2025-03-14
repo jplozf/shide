@@ -23,10 +23,17 @@ function toLower {
 #-----------------------------------------------------------------------
 function getGITStatus {
 	if [ -z "$(git status -s)" ]; then
-		echo " ⯈ GIT up to date"
+		echo "⯈ GIT up to date"
 	else
-		echo " ⯈ GIT pending commit"
+		echo "⯈ GIT pending commit"
 	fi
+}
+
+#-----------------------------------------------------------------------
+# getStatusBar()
+#-----------------------------------------------------------------------
+function getStatusBar {
+	echo "${ide} :: ${project} [${language}] $(getGITStatus)"
 }
 
 #-----------------------------------------------------------------------
@@ -794,7 +801,7 @@ function configureTheme {
 				3 "Dark / Yellow / Red"
 				4 "Customized")
 					
-	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	while choice=$(dialog --backtitle "$(getStatusBar)" \
 				--title "Theme" \
 				--menu "" 12 40 10 "${itemsThemes[@]}" \
 				2>&1 >/dev/tty)
@@ -824,7 +831,7 @@ function configureUserName {
 	else
 		tmpUser="${userIDE}"
 	fi
-	varUser=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	varUser=$(dialog --backtitle "$(getStatusBar)" \
 			 --title "User's name" \
 			 --inputbox "\nPlease, enter your user's name :" 12 40 "${tmpUser}" \
 			 2>&1 >/dev/tty)
@@ -843,7 +850,7 @@ function configureMailAddress {
 	else
 		tmpMail="${mailIDE}"
 	fi
-	varMail=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	varMail=$(dialog --backtitle "$(getStatusBar)" \
 			 --title "Mail Address" \
 			 --inputbox "\nPlease, enter your mail address :" 12 40 "${tmpMail}" \
 			 2>&1 >/dev/tty)
@@ -857,7 +864,7 @@ function configureMailAddress {
 # configureConfirmExit()
 #-----------------------------------------------------------------------
 function configureConfirmExit {
-	dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	dialog 	--backtitle "$(getStatusBar)" \
 		--title "Confirm exit" \
 		--yesno "\nWould you like to confirm on exit ?\n\nCurrently, the value is set to ${confirmExitIDE}." 11 60
 	response=$?
@@ -877,7 +884,7 @@ function configureIDE {
 				3 "Theme"
 				4 "Confirmation on exit")
 					
-	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	while choice=$(dialog --backtitle "$(getStatusBar)" \
 				--title "IDE Configuration" \
 				--menu "" 12 40 10 "${itemsConfig[@]}" \
 				2>&1 >/dev/tty)
@@ -914,7 +921,7 @@ function chooseLicense {
 				14 "Mozilla Public License v2.0"
 				15 "Unlicense (Public Domain)")
 					
-	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	while choice=$(dialog --backtitle "$(getStatusBar)" \
 				--title "License" \
 				--menu "" 25 50 10 "${itemsLicenses[@]}" \
 				2>&1 >/dev/tty)
@@ -1074,7 +1081,7 @@ function recentFiles {
 		let i=$i+1
 		W+=($i "${line:0:-1}")
 	done < "$configDir/MRUFiles"
-	file=$(dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	file=$(dialog 	--backtitle "$(getStatusBar)" \
 			--title "Recent files" \
 			--menu "" 24 80 17 "${W[@]}" \
 			2>&1 >/dev/tty)
@@ -1096,7 +1103,7 @@ function openFile {
 		let i=$i+1
 		W+=($i "$line")
 	done < <( ls -a1 ./ )
-	file=$(dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	file=$(dialog 	--backtitle "$(getStatusBar)" \
 					--title "Open file" \
 					--menu "Please select :" 24 80 17 "${W[@]}" \
 					2>&1 >/dev/tty)
@@ -1125,7 +1132,7 @@ function deleteFile {
 		let i=$i+1
 		W+=($i "$line")
 	done < <( ls -a1 ./ )
-	file=$(dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	file=$(dialog 	--backtitle "$(getStatusBar)" \
 					--title "Delete file" \
 					--menu "Please select :" 24 80 17 "${W[@]}" \
 					2>&1 >/dev/tty)
@@ -1137,7 +1144,7 @@ function deleteFile {
 			cd "$opt"
 			deleteFile
 		else			# or a file ?
-			dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+			dialog 	--backtitle "$(getStatusBar)" \
 				--title "Deleting file" \
 				--yesno "Are you sure you want to delete the following file ?\n\n$opt" 7 60
 			response=$?
@@ -1145,7 +1152,7 @@ function deleteFile {
 				0) git ls-files --error-unmatch "$opt" > /dev/null 2>&1
 				rc=$?
 				if [ $rc -eq 0 ]; then
-					dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+					dialog --backtitle "$(getStatusBar)" \
 						--title "Deleting file from GIT" \
 						--yesno "Do you wish to remove this file from GIT tracking ?\n\n$opt" 7 60
 					response=$?
@@ -1169,7 +1176,7 @@ function deleteFile {
 #-----------------------------------------------------------------------
 function gitAddFile {
 	if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
-		dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		dialog 	--backtitle "$(getStatusBar)" \
 			--title "GIT adding file" \
 			--yesno "\nWould you like to add the following file to the GIT tracking ?\n\n$1" 11 60
 		response=$?
@@ -1184,7 +1191,7 @@ function gitAddFile {
 # newFileOther()
 #-----------------------------------------------------------------------
 function newFileOther {
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 			     --title "New file" \
 				 --inputbox "Please, enter the file name :" 12 40 \
 				 2>&1 >/dev/tty)
@@ -1202,7 +1209,7 @@ function newFileOther {
 # newFileC()
 #-----------------------------------------------------------------------
 function newFileC {
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 			     --title "New C file" \
 				 --inputbox "Please, enter the file name :" 12 40 \
 				 2>&1 >/dev/tty)
@@ -1232,7 +1239,7 @@ EOF
 # newFileCPP()
 #-----------------------------------------------------------------------
 function newFileCPP {
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 			     --title "New C++ file" \
 				 --inputbox "Please, enter the file name :" 12 40 \
 				 2>&1 >/dev/tty)
@@ -1262,7 +1269,7 @@ EOF
 # newFileH()
 #-----------------------------------------------------------------------
 function newFileH {
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 			--title "New Header file" \
 			--inputbox "Please, enter the file name :" 12 40 \
 				 2>&1 >/dev/tty)
@@ -1291,7 +1298,7 @@ EOF
 # newFileJAVA()
 #-----------------------------------------------------------------------
 function newFileJAVA {
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 		     --title "New Java file" \
 		     --inputbox "Please, enter the file name :" 12 40 \
 				 2>&1 >/dev/tty)
@@ -1324,7 +1331,7 @@ EOF
 # newFilePY()
 #-----------------------------------------------------------------------
 function newFilePY {
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 			     --title "New Python file" \
 				 --inputbox "Please, enter the file name :" 12 40 \
 				 2>&1 >/dev/tty)
@@ -1366,7 +1373,7 @@ EOF
 # newFileGO()
 #-----------------------------------------------------------------------
 function newFileGO {
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 			     --title "New Go file" \
 				 --inputbox "Please, enter the file name :" 12 40 \
 				 2>&1 >/dev/tty)
@@ -1397,7 +1404,7 @@ EOF
 # newFileRS()
 #-----------------------------------------------------------------------
 function newFileRS {
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 			     --title "New Rust file" \
 				 --inputbox "Please, enter the file name :" 12 40 \
 				 2>&1 >/dev/tty)
@@ -1424,7 +1431,7 @@ EOF
 # newFileHTML()
 #-----------------------------------------------------------------------
 function newFileHTML {
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 			     --title "New HTML file" \
 				 --inputbox "Please, enter the file name :" 12 40 \
 				 2>&1 >/dev/tty)
@@ -1454,7 +1461,7 @@ EOF
 # newFileXML()
 #-----------------------------------------------------------------------
 function newFileXML {
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 			     --title "New XML file" \
 				 --inputbox "Please, enter the file name :" 12 40 \
 				 2>&1 >/dev/tty)
@@ -1482,7 +1489,7 @@ EOF
 # newFileJSON()
 #-----------------------------------------------------------------------
 function newFileJSON {
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 			     --title "New JSON file" \
 				 --inputbox "Please, enter the file name :" 12 40 \
 				 2>&1 >/dev/tty)
@@ -1531,7 +1538,7 @@ EOF
 # newFileMD()
 #-----------------------------------------------------------------------
 function newFileMD {
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 			     --title "New Markdown file" \
 				 --inputbox "Please, enter the file name :" 12 40 \
 				 2>&1 >/dev/tty)
@@ -1576,7 +1583,7 @@ EOF
 # newFileTXT()
 #-----------------------------------------------------------------------
 function newFileTXT {
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 			     --title "New Text file" \
 				 --inputbox "Please, enter the file name :" 12 40 \
 				 2>&1 >/dev/tty)
@@ -1606,7 +1613,7 @@ EOF
 # newFolder()
 #-----------------------------------------------------------------------
 function newFolder {
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 			     --title "New folder" \
 				 --inputbox "Please, enter the new folder name :" 12 40 \
 				 2>&1 >/dev/tty)
@@ -1615,7 +1622,7 @@ function newFolder {
 	else
 		mkdir "${new}"
 		if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
-			dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+			dialog 	--backtitle "$(getStatusBar)" \
 				--title "GIT adding file" \
 				--yesno "\nWould you like to add the following folder to the GIT tracking ?\n\n${new}" 11 60
 			response=$?
@@ -1650,7 +1657,7 @@ function isFolderGITTracked {
 # deleteFolder()
 #-----------------------------------------------------------------------
 function deleteFolder {
-	folder=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	folder=$(dialog --backtitle "$(getStatusBar)" \
 			     --title "Delete folder" \
 				 --dselect ${project} 15 80 \
 				 2>&1 >/dev/tty)
@@ -1660,13 +1667,13 @@ function deleteFolder {
 			return
 		else
 			if [ $( ls -A "${folder}" | wc -l ) -eq 0 ]; then
-				dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+				dialog 	--backtitle "$(getStatusBar)" \
 					--title "Delete folder" \
 					--yesno "\nAre you sure you want to delete the following folder ?\n\n${folder}" 11 60
 				response=$?
 				case $response in
 					0) if isFolderGITTracked "${folder}"; then 
-						dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+						dialog --backtitle "$(getStatusBar)" \
 							--title "Deleting folder from GIT" \
 							--yesno "Do you wish to remove this folder from GIT tracking ?\n\n${folder}" 7 60
 						response=$?
@@ -1684,13 +1691,13 @@ function deleteFolder {
 				esac
 				
 			else
-				dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+				dialog 	--backtitle "$(getStatusBar)" \
 					--title "Delete folder" \
 					--yesno "\nThe following folder is not empty.\nAre you sure you want to delete it ?\n\n${folder}" 11 60
 				response=$?
 				case $response in
 					0) if isFolderGITTracked "${folder}"; then 
-						dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+						dialog --backtitle "$(getStatusBar)" \
 							--title "Deleting folder from GIT" \
 							--yesno "Do you wish to remove this folder from GIT tracking ?\n\n${folder}" 7 60
 						response=$?
@@ -1733,7 +1740,7 @@ function menuNewFile {
                        13 "License"
                        14 "Other")
 
-	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	while choice=$(dialog --backtitle "$(getStatusBar)" \
 				--title "New file" \
 				--menu "" 20 40 10 "${itemsNew[@]}" \
 				2>&1 >/dev/tty)
@@ -1769,7 +1776,7 @@ function menuFiles {
 				4 "Delete file"
 				5 "New folder"
 				6 "Delete folder")
-		while choice=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		while choice=$(dialog --backtitle "$(getStatusBar)" \
 					 --title "Files" \
 					 --menu "" 12 40 10 "${itemsFiles[@]}" \
 					 2>&1 >/dev/tty)	
@@ -1790,7 +1797,7 @@ function menuFiles {
 				3 "Delete file"
 				4 "New folder"
 				5 "Delete folder")
-		while choice=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		while choice=$(dialog --backtitle "$(getStatusBar)" \
 					 --title "Files" \
 					 --menu "" 12 40 10 "${itemsFiles[@]}" \
 					 2>&1 >/dev/tty)	
@@ -1828,7 +1835,7 @@ function recentProjects {
 		let i=$i+1
 		W+=($i "${line:0:-1}")
 	done < "$configDir/MRUProjects"
-	file=$(dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	file=$(dialog 	--backtitle "$(getStatusBar)" \
 			--title "Recent projects" \
 			--menu "" 24 80 17 "${W[@]}" \
 			2>&1 >/dev/tty)
@@ -1852,7 +1859,7 @@ function openProject {
 		let i=$i+1
 		W+=($i "$line")
 	done < <( find . -maxdepth 1 -type d -o -type l | sort -k1 )
-	file=$(dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	file=$(dialog 	--backtitle "$(getStatusBar)" \
 					--title "Open project" \
 					--menu "Please, move to the project folder :" 24 80 17 "${W[@]}" \
 					2>&1 >/dev/tty)
@@ -1879,7 +1886,7 @@ function openProject {
 # inputNewProjectName()
 #-----------------------------------------------------------------------
 function inputNewProjectName {
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 				 --title "New project" \
 				 --inputbox "Please, enter the project name :" 12 40 \
 				 2>&1 >/dev/tty)
@@ -2141,7 +2148,7 @@ function projectC {
 	itemsCToolkits=(1 "C Raw"
 			2 "C NCurses"
 			3 "C++ Raw")
-	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	while choice=$(dialog --backtitle "$(getStatusBar)" \
 				 --title "C Toolkit" \
 				 --menu "" 12 40 10 "${itemsCToolkits[@]}" \
 				 2>&1 >/dev/tty)	
@@ -2194,14 +2201,14 @@ EOF
 #-----------------------------------------------------------------------
 function projectGIT {
 	language="GIT"
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 				 --title "Clone GIT project" \
 				 --inputbox "Please, enter the Github repository name :" 12 40 \
 				 2>&1 >/dev/tty)
 	if [[ -z $new ]] then
 		return
 	else
-		dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		dialog --backtitle "$(getStatusBar)" \
 			--title "GIT Cloning" \
 			--infobox "\nCloning $new\n\nPlease wait..." 15 50
 		git clone --progress $new &>/dev/null
@@ -2213,7 +2220,7 @@ function projectGIT {
 			guessLanguage
 			infoProject
 		else
-			dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+			dialog --backtitle "$(getStatusBar)" \
 			--title "GIT Cloning" \
 			--msgbox "\nError cloning :\n\n$new" 15 50
 		fi
@@ -2249,7 +2256,7 @@ function newProject {
 			4 "Python"
 			5 "Rust"
 			6 "Clone from GIT")
-	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	while choice=$(dialog --backtitle "$(getStatusBar)" \
 				 --title "Language" \
 				 --menu "" 13 40 10 "${itemsLanguages[@]}" \
 				 2>&1 >/dev/tty)	
@@ -2276,7 +2283,7 @@ function infoProject {
 	rawProject=`basename "${project}"`
 	tree -Dh > $outFile
 	cloc ./ >> $outFile
-	new=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	new=$(dialog --backtitle "$(getStatusBar)" \
 			 --title "PROJECT :: $rawProject" \
 			 --textbox "$outFile" 25 100 \
 			 2>&1 >/dev/tty)
@@ -2287,11 +2294,11 @@ function infoProject {
 #-----------------------------------------------------------------------
 function archiveProject {
 	fzip="${project}_$(date +"%Y%m%d-%H%M%S").zip"
-			dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+			dialog --backtitle "$(getStatusBar)" \
 			--title "Archiving project" \
 			--infobox "\nArchiving to $fzip file.\n\nPlease wait..." 15 80
 	zip -r "$fzip" ./ >/dev/null 2>&1
-	dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	dialog --backtitle "$(getStatusBar)" \
 				 --title "Archiving project" \
 				 --msgbox "\nThe following archive has been created :\n\n$fzip" 15 80 \
 				 2>&1 >/dev/tty
@@ -2353,7 +2360,7 @@ function buildProgram {
 		$buildFile > $outFile 2>&1
 		ec=$?
 		case $ec in
-			0) dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+			0) dialog --backtitle "$(getStatusBar)" \
 				 --title "Build project" \
 				 --msgbox "\nThe program has been build successfully.\n" 12 80 \
 				 2>&1 >/dev/tty ;;
@@ -2366,7 +2373,7 @@ function buildProgram {
 	else
 		pyFile=`basename "${project}".py`
 		if [ -f "$pyFile" ]; then
-			dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+			dialog --backtitle "$(getStatusBar)" \
 				 --title "Build project" \
 				 --msgbox "\nNo need to build Python program.\nYou just have to run it.\n" 12 80 \
 				 2>&1 >/dev/tty
@@ -2387,7 +2394,7 @@ function buildProgram {
 					go build . > $outFile 2>&1
 					ec=$?
 					case $ec in
-						0) dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+						0) dialog --backtitle "$(getStatusBar)" \
 							 --title "Build project" \
 							 --msgbox "\nThe program has been build successfully.\n" 12 80 \
 							 2>&1 >/dev/tty ;;
@@ -2404,18 +2411,18 @@ function buildProgram {
 						cargo build > $outFile 2>&1
 						ec=$?
 						case $ec in
-							0) dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+							0) dialog --backtitle "$(getStatusBar)" \
 								 --title "Build project" \
 								 --msgbox "\nThe program has been build successfully.\n" 12 80 \
 								 2>&1 >/dev/tty ;;
-							*) dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+							*) dialog --backtitle "$(getStatusBar)" \
 								 --title "Build project" \
 								 --textbox "$outFile" 25 80 \
 								 2>&1 >/dev/tty ;;
 						esac
 						infoProject
 					else
-						dialog	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+						dialog	--backtitle "$(getStatusBar)" \
 							--title "ERROR" \
 							--msgbox "\nCan't find something to build." 12 80 \
 							2>&1 >/dev/tty
@@ -2446,7 +2453,7 @@ function buildRunProgram {
 		ec=$?
 		case $ec in
 			0) runProgram ;;
-			*) dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+			*) dialog --backtitle "$(getStatusBar)" \
 				 --title "Build project" \
 				 --textbox "$outFile" 25 80 \
 				 2>&1 >/dev/tty 
@@ -2474,7 +2481,7 @@ function buildRunProgram {
 					ec=$?
 					case $ec in
 						0) runProgram ;;
-						*) dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+						*) dialog --backtitle "$(getStatusBar)" \
 							 --title "Build project" \
 							 --textbox "$outFile" 25 80 \
 							 2>&1 >/dev/tty
@@ -2488,14 +2495,14 @@ function buildRunProgram {
 						ec=$?
 						case $ec in
 							0) runProgram ;;
-							*) dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+							*) dialog --backtitle "$(getStatusBar)" \
 								 --title "Build project" \
 								 --textbox "$outFile" 25 80 \
 								 2>&1 >/dev/tty
 							   infoProject ;;
 						esac						
 					else
-						dialog	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+						dialog	--backtitle "$(getStatusBar)" \
 							--title "ERROR" \
 							--msgbox "\nCan't find something to build and run." 12 80 \
 							2>&1 >/dev/tty
@@ -2525,7 +2532,7 @@ function runProgram {
 				${project}/$binFile
 				pause
 			else
-				dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+				dialog --backtitle "$(getStatusBar)" \
 					 --title "ERROR" \
 					 --msgbox "\nCan't execute :\n\n$binFile" 12 80 \
 					 2>&1 >/dev/tty
@@ -2555,7 +2562,7 @@ function runProgram {
 							cargo run
 							pause
 						else
-							dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+							dialog 	--backtitle "$(getStatusBar)" \
 								--title "ERROR" \
 								--msgbox "\nCan't find something to execute." 12 80 \
 								2>&1 >/dev/tty
@@ -2582,7 +2589,7 @@ gcc -o $binFile myfile.c
 EOF
 	chmod +x "${buildFile}"
 	fi
-	dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	dialog 	--backtitle "$(getStatusBar)" \
 			--title "Customizing Build command" \
 			--editbox $buildFile 10 60 2> "${outFile}"
 	rc=$?
@@ -2607,7 +2614,7 @@ $project/$binFile
 EOF
 	chmod +x "${runFile}"
 	fi
-	dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	dialog 	--backtitle "$(getStatusBar)" \
 			--title "Customizing Run command" \
 			--editbox $runFile 10 60 2> "${outFile}"
 	rc=$?
@@ -2623,7 +2630,7 @@ EOF
 function customizeBuildRun {
 	itemsBuildRun=(	1 "Customize Build"
 			2 "Customize Run")
-	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	while choice=$(dialog --backtitle "$(getStatusBar)" \
 					 --title "Customize Build & Run" \
 					 --menu "" 12 40 10 "${itemsBuildRun[@]}" \
 					 2>&1 >/dev/tty)	
@@ -2644,7 +2651,7 @@ function menuBuildRun {
 			2 "Run"
 			3 "Build & Run"
 			4 "Customize")
-	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	while choice=$(dialog --backtitle "$(getStatusBar)" \
 					 --title "Build & Run" \
 					 --menu "" 12 40 10 "${itemsBuildRun[@]}" \
 					 2>&1 >/dev/tty)	
@@ -2670,12 +2677,12 @@ function gitStatus {
 		git status &>> $outFile
 		echo -e "\n" >> $outFile
 		git diff &>> $outFile
-		dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		dialog --backtitle "$(getStatusBar)" \
 				 --title "GIT Status" \
 				 --textbox "$outFile" 25 100 \
 				 2>&1 >/dev/tty
 	else
-		dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		dialog --backtitle "$(getStatusBar)" \
 			--title "GIT Status" \
 			--msgbox "\nNo GIT repository found." 15 50
 	fi
@@ -2687,20 +2694,20 @@ function gitStatus {
 function gitCommit {
 	if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
 		outFile=`mktemp`
-		msg=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		msg=$(dialog --backtitle "$(getStatusBar)" \
 					 --title "GIT Commit" \
 					 --inputbox "Please, enter the Commit message :" 12 40 \
 					 2>&1 >/dev/tty)
 		button=$?
 		if [ $button -eq 0 ]; then				 
 			git commit -a -m "${msg}" &> $outFile
-			dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+			dialog --backtitle "$(getStatusBar)" \
 				 --title "GIT Commit" \
 				 --textbox "$outFile" 25 100 \
 				 2>&1 >/dev/tty
 		fi
 	else
-		dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		dialog --backtitle "$(getStatusBar)" \
 			--title "GIT Commit" \
 			--msgbox "\nNo GIT repository found." 15 50
 	fi
@@ -2714,12 +2721,12 @@ function gitPush {
 		outFile=`mktemp`
 		branch="$(git rev-parse --abbrev-ref HEAD)"
 		git push origin ${branch} &> $outFile
-		dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		dialog --backtitle "$(getStatusBar)" \
 			 --title "GIT Push" \
 			 --textbox "$outFile" 25 100 \
 			 2>&1 >/dev/tty
 	else
-		dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		dialog --backtitle "$(getStatusBar)" \
 			--title "GIT Push" \
 			--msgbox "\nNo GIT repository found." 15 50
 	fi
@@ -2731,7 +2738,7 @@ function gitPush {
 function gitCommitPush {
 	if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
 		outFile=`mktemp`
-		msg=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		msg=$(dialog --backtitle "$(getStatusBar)" \
 					 --title "GIT Commit & Push" \
 					 --inputbox "\nPlease, enter the Commit message :" 12 40 \
 					 2>&1 >/dev/tty)
@@ -2740,13 +2747,13 @@ function gitCommitPush {
 			git commit -a -m "${msg}" &> $outFile
 			branch="$(git rev-parse --abbrev-ref HEAD)"
 			git push origin ${branch} &>> $outFile
-			dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+			dialog --backtitle "$(getStatusBar)" \
 				 --title "GIT Commit & Push" \
 				 --textbox "$outFile" 25 100 \
 				 2>&1 >/dev/tty
 		fi
 	else
-		dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		dialog --backtitle "$(getStatusBar)" \
 			--title "GIT Commit & Push" \
 			--msgbox "\nNo GIT repository found." 15 50
 	fi
@@ -2761,7 +2768,7 @@ function gitConfigUser {
 	else
 		tmpuser=$USER
 	fi
-	gituser=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	gituser=$(dialog --backtitle "$(getStatusBar)" \
 			 --title "GIT Config" \
 			 --inputbox "\nPlease, enter your Github user :" 12 40 ${tmpuser} \
 			 2>&1 >/dev/tty)
@@ -2778,7 +2785,7 @@ function gitConfigKey {
 	if [ -e "$configDir/.github.key" ]; then
 		tmpkey=$(< $configDir/.github.key)
 	fi
-	gitkey=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	gitkey=$(dialog --backtitle "$(getStatusBar)" \
 			 --title "GIT Config" \
 			 --inputbox "\nPlease, enter your Github key :" 12 50 ${tmpkey} \
 			 2>&1 >/dev/tty)
@@ -2793,7 +2800,7 @@ function gitConfigKey {
 #-----------------------------------------------------------------------
 function gitBang {
 	pjname=`basename "${project}"`
-	dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	dialog 	--backtitle "$(getStatusBar)" \
 		--title "GIT Bang" \
 		--yesno "\nThis will initialize a GIT environment for your project [${pjname}].\n\nAre you sure you want to proceed ?" 11 60
 	response=$?
@@ -2804,7 +2811,7 @@ function gitBang {
 		else
 			gitConfigUser
 		fi
-		dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		dialog 	--backtitle "$(getStatusBar)" \
 			--title "GIT Bang" \
 			--yesno "\nThe following repository should already exist :\n\nhttps://github.com/${gituser}/${pjname}\n\nHas the repository already been created ?" 13 60
 		response=$?
@@ -2847,14 +2854,14 @@ function gitBang {
 #-----------------------------------------------------------------------
 function gitFetch {
 	if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
-		dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		dialog 	--backtitle "$(getStatusBar)" \
 			--title "GIT Fetch" \
 			--yesno "\nThe GIT Fetch will fetch the remote version but no merging is processed locally.\n\nAre you sure you want to proceed ?" 11 60
 		response=$?
 		case $response in
 			0) outFile=`mktemp`
 			git fetch origin &> $outFile
-			dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+			dialog --backtitle "$(getStatusBar)" \
 				 --title "GIT Fetch" \
 				 --textbox "$outFile" 25 100 \
 				 2>&1 >/dev/tty
@@ -2863,7 +2870,7 @@ function gitFetch {
 			*) ;;
 		esac
 	else
-		dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		dialog --backtitle "$(getStatusBar)" \
 			--title "GIT Fetch" \
 			--msgbox "\nNo GIT repository found." 15 50
 	fi
@@ -2882,7 +2889,7 @@ function gitPull {
 		case $response in
 			0) outFile=`mktemp`
 			git pull origin ${branch} &> $outFile
-			dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+			dialog --backtitle "$(getStatusBar)" \
 				 --title "GIT Pull" \
 				 --textbox "$outFile" 25 100 \
 				 2>&1 >/dev/tty
@@ -2903,7 +2910,7 @@ function gitPull {
 function gitConfigure {
 	itemsGIT=(1 "Configure user"
 		      2 "Configure key")
-	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	while choice=$(dialog --backtitle "$(getStatusBar)" \
 					 --title "GIT Configure" \
 					 --menu "" 15 40 10 "${itemsGIT[@]}" \
 					 2>&1 >/dev/tty)	
@@ -2928,7 +2935,7 @@ function menuGIT {
 				  6 "Pull (Fetch & Merge)"
 				  7 "Initialize (GIT Bang)"
 				  8 "Configure")
-	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	while choice=$(dialog --backtitle "$(getStatusBar)" \
 					 --title "GIT Tracking" \
 					 --menu "" 15 40 10 "${itemsGIT[@]}" \
 					 2>&1 >/dev/tty)	
@@ -2958,7 +2965,7 @@ function menuProject {
 				4 "Info"
 				5 "Archive project"
 				6 "Configure ${ide}")
-		while choice=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		while choice=$(dialog --backtitle "$(getStatusBar)" \
 					 --title "Project" \
 					 --menu "" 12 40 10 "${itemsProject[@]}" \
 					 2>&1 >/dev/tty)	
@@ -2979,7 +2986,7 @@ function menuProject {
 				3 "Info"
 				4 "Archive project"
 				5 "Configure ${ide}")
-		while choice=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		while choice=$(dialog --backtitle "$(getStatusBar)" \
 					 --title "Project" \
 					 --menu "" 12 40 10 "${itemsProject[@]}" \
 					 2>&1 >/dev/tty)	
@@ -3001,7 +3008,7 @@ function menuProject {
 #-----------------------------------------------------------------------
 function menuExit {
 	if [ ${confirmExitIDE} = true ]; then
-		dialog 	--backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+		dialog 	--backtitle "$(getStatusBar)" \
 			--title "Exiting" \
 			--yesno "Are you sure you want to exit ?" 7 60
 		response=$?
@@ -3036,7 +3043,7 @@ updateMRUProjects
 doloop=1
 while [ $doloop -eq 1 ]
 do
-	while choice=$(dialog --backtitle "${ide} :: ${project} [${language}] $(getGITStatus)" \
+	while choice=$(dialog --backtitle "$(getStatusBar)" \
 					 --title "Main Menu" \
 					 --menu "" 12 40 10 "${items[@]}" \
 					 2>&1 >/dev/tty)	
