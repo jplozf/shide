@@ -3063,4 +3063,4 @@ do
 done
 saveConfig
 clear # Exiting
-echo "⚗  ${ide} :: Exiting at $(date '+%d/%m/%Y %H:%M:%S')."
+echo "⚗  ${ide} © jpl@ozf.fr 2025 :: Exiting at $(date '+%d/%m/%Y %H:%M:%S')."
